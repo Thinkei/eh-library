@@ -1,12 +1,18 @@
 #![feature(proc_macro_hygiene, decl_macro)]
 
 #[macro_use] extern crate rocket;
+#[macro_use] extern crate serde_derive;
 
-#[get("/hello/<name>/<age>")]
-fn hello(name: String, age: u8) -> String {
-    format!("Hello, {} year old named {}", age, name)
+use rocket_contrib::json::Json;
+
+mod book;
+use book::Book;
+
+#[post("/", data = "<book>")]
+fn create(book: Json<Book>) -> Json<Book> {
+    book
 }
 
 fn main() {
-    rocket::ignite().mount("/", routes![hello]).launch();
+    rocket::ignite().mount("/books", routes![create]).launch();
 }
