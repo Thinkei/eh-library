@@ -1,6 +1,6 @@
 table! {
     books (id) {
-        id -> Int4,
+        id -> Nullable<Integer>,
         name -> Varchar,
     }
 }

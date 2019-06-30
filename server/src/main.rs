@@ -15,8 +15,9 @@ mod book;
 use book::Book;
 
 #[post("/", data = "<book>")]
-fn create(book: Json<Book>) -> Json<Book> {
-    book
+fn create(book: Json<Book>, connection: db::Connection) -> Json<Book> {
+    let new_book = Book { id: None, ..book.into_inner()};
+    Json(Book::create(new_book, &connection))
 }
 
 fn main() {
