@@ -7,6 +7,7 @@ extern crate r2d2_diesel;
 #[macro_use] extern crate rocket;
 #[macro_use] extern crate serde_derive;
 
+use dotenv::dotenv;
 use rocket_contrib::json;
 use rocket_contrib::json::{ Json, JsonValue };
 
@@ -27,6 +28,8 @@ fn list(connection: db::Connection) -> Json<JsonValue> {
 }
 
 fn main() {
+    dotenv().ok();
+
     rocket::ignite()
         .manage(db::connect())
         .mount("/books", routes![create, list]).launch();
