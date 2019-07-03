@@ -7,7 +7,8 @@ extern crate r2d2_diesel;
 #[macro_use] extern crate rocket;
 #[macro_use] extern crate serde_derive;
 
-use rocket_contrib::json::Json;
+use rocket_contrib::json;
+use rocket_contrib::json::{ Json, JsonValue };
 
 mod db;
 mod schema;
@@ -20,8 +21,13 @@ fn create(book: Json<Book>, connection: db::Connection) -> Json<Book> {
     Json(Book::create(new_book, &connection))
 }
 
+#[get("/")]
+fn list(connection: db::Connection) -> Json<JsonValue> {
+    Json(json!(Book::list(&connection)))
+}
+
 fn main() {
     rocket::ignite()
         .manage(db::connect())
-        .mount("/books", routes![create]).launch();
+        .mount("/books", routes![create, list]).launch();
 }

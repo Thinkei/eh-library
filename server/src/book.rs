@@ -19,4 +19,8 @@ impl Book {
 
         books::table.order(books::id.desc()).first(connection).unwrap()
     }
+
+    pub fn list(connection: &PgConnection) -> Vec<Book> {
+        books::table.order(books::id.desc()).load::<Book>(connection).unwrap()
+    }
 }
