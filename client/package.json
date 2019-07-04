@@ -11,6 +11,7 @@
   },
   "devDependencies": {
     "@glennsl/bs-json": "^4.0.0",
+    "bs-css": "^9.0.1",
     "bs-platform": "^5.0.6",
     "bsb-js": "^1.1.7",
     "parcel-bundler": "^1.12.3",
