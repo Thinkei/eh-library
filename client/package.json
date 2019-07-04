@@ -1,0 +1,20 @@
+{
+  "name": "eh-library",
+  "description": "EH Library Management Website",
+  "version": "0.0.1",
+  "main": "index.js",
+  "author": "Employment Hero",
+  "license": "MIT",
+  "scripts": {
+    "start": "bsb -clean -make-world -w",
+    "dev": "parcel ./index.html"
+  },
+  "devDependencies": {
+    "@glennsl/bs-json": "^4.0.0",
+    "bs-platform": "^5.0.6",
+    "bsb-js": "^1.1.7",
+    "parcel-bundler": "^1.12.3",
+    "reason-react": "^0.7.0"
+  },
+  "dependencies": {}
+}
