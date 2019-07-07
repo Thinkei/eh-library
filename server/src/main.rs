@@ -14,8 +14,9 @@ use rocket_contrib::json::{ Json, JsonValue };
 
 mod db;
 mod schema;
-mod book;
-use book::Book;
+mod models;
+mod books;
+// use books::Book;
 
 fn render_errors(err: diesel::result::Error, code: String) -> JsonValue {
     json!({
@@ -26,17 +27,17 @@ fn render_errors(err: diesel::result::Error, code: String) -> JsonValue {
     })
 }
 
-#[post("/", data = "<book>")]
-fn create(book: Json<Book>, connection: db::Connection) -> Result<status::Created<Json<Book>>, JsonValue> {
-    let new_book = Book { id: None, ..book.into_inner()};
-    Book::create(new_book, &connection)
-        .map(|x| status::Created(String::from("/books"), Some(Json(x))) )
-        .map_err(|e| render_errors(e, String::from("422")))
-}
+// #[post("/", data = "<book>")]
+// fn create(book: Json<Book>, connection: db::Connection) -> Result<status::Created<Json<Book>>, JsonValue> {
+//     let new_book = Book { id: None, ..book.into_inner()};
+//     Book::create(new_book, &connection)
+//         .map(|x| status::Created(String::from("/books"), Some(Json(x))) )
+//         .map_err(|e| render_errors(e, String::from("422")))
+// }
 
 #[get("/")]
 fn list(connection: db::Connection) -> Json<JsonValue> {
-    Json(json!(Book::list(&connection)))
+    Json(json!(books::repository::list(&connection)))
 }
 
 fn main() {
@@ -44,5 +45,5 @@ fn main() {
 
     rocket::ignite()
         .manage(db::connect())
-        .mount("/books", routes![create, list]).launch();
+        .mount("/books", routes![list]).launch();
 }
