@@ -12,8 +12,8 @@ use rocket::response::status;
 use rocket_contrib::json;
 use rocket_contrib::json::{ Json, JsonValue };
 
-mod db;
-mod schema;
+pub mod db;
+pub mod schema;
 mod models;
 mod books;
 // use books::Book;
@@ -35,15 +35,10 @@ fn render_errors(err: diesel::result::Error, code: String) -> JsonValue {
 //         .map_err(|e| render_errors(e, String::from("422")))
 // }
 
-#[get("/")]
-fn list(connection: db::Connection) -> Json<JsonValue> {
-    Json(json!(books::repository::list(&connection)))
-}
-
 fn main() {
     dotenv().ok();
 
     rocket::ignite()
         .manage(db::connect())
-        .mount("/books", routes![list]).launch();
+        .mount("/books", routes![books::handler::list]).launch();
 }
