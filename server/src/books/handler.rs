@@ -20,3 +20,10 @@ pub fn create(book: Json<InsertableBook>, connection: Connection) -> Result<stat
         .map(|x| status::Created(String::from("/books"), Some(Json(x))) )
         .map_err(|e| render_errors(e, Status::UnprocessableEntity))
 }
+
+#[get("/<id>")]
+pub fn get(id: i32, connection: Connection) -> Result<Json<Book>, status::Custom<JsonValue>> {
+    repository::get(id, &connection)
+        .map(|x| Json(x))
+        .map_err(|e| render_errors(e, Status::NotFound))
+}

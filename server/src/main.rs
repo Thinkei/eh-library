@@ -23,6 +23,7 @@ fn main() {
         .mount("/books", routes![
             books::handler::list,
             books::handler::create,
+            books::handler::get,
         ])
         .launch();
 }
