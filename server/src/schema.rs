@@ -1,6 +1,6 @@
 table! {
     books (id) {
-        id -> Integer,
+        id -> Int4,
         name -> Varchar,
     }
 }
