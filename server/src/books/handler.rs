@@ -1,5 +1,6 @@
 use crate::db::Connection;
 use crate::google_json_response::{ render_errors, render_records, render_record };
+use crate::models::Book;
 use rocket_contrib::json::{ Json, JsonValue };
 use rocket::response::status;
 use rocket::http::Status;
@@ -25,4 +26,11 @@ pub fn get(id: i32, connection: Connection) -> Result<JsonValue, status::Custom<
     repository::get(id, &connection)
         .map(|x| render_record(x))
         .map_err(|e| render_errors(e, Status::NotFound))
+}
+
+#[put("/<id>", data = "<book>")]
+pub fn update(id: i32, book: Json<Book>, connection: Connection) -> Result<JsonValue, status::Custom<JsonValue>> {
+    repository::update(id, book.into_inner(), &connection)
+        .map(|x| render_record(x))
+        .map_err(|e| render_errors(e, Status::UnprocessableEntity))
 }
