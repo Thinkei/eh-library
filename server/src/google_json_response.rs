@@ -25,3 +25,9 @@ pub fn render_records<T: Serialize>(records: Vec<T>) -> JsonValue {
         }
     })
 }
+
+pub fn render_record<T: Serialize>(record: T) -> JsonValue {
+    json!({
+        "data": record
+    })
+}
