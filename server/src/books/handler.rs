@@ -1,6 +1,5 @@
 use crate::db::Connection;
-use crate::google_json_response::{ render_errors, render_records };
-use crate::models::Book;
+use crate::google_json_response::{ render_errors, render_records, render_record };
 use rocket_contrib::json::{ Json, JsonValue };
 use rocket::response::status;
 use rocket::http::Status;
@@ -15,15 +14,15 @@ pub fn list(connection: Connection) -> Result<JsonValue, Status> {
 }
 
 #[post("/", data = "<book>")]
-pub fn create(book: Json<InsertableBook>, connection: Connection) -> Result<status::Created<Json<Book>>, status::Custom<JsonValue>> {
+pub fn create(book: Json<InsertableBook>, connection: Connection) -> Result<status::Created<JsonValue>, status::Custom<JsonValue>> {
     repository::create(book.into_inner(), &connection)
-        .map(|x| status::Created(String::from("/books"), Some(Json(x))) )
+        .map(|x| status::Created(String::from("/books"), Some(render_record(x))) )
         .map_err(|e| render_errors(e, Status::UnprocessableEntity))
 }
 
 #[get("/<id>")]
-pub fn get(id: i32, connection: Connection) -> Result<Json<Book>, status::Custom<JsonValue>> {
+pub fn get(id: i32, connection: Connection) -> Result<JsonValue, status::Custom<JsonValue>> {
     repository::get(id, &connection)
-        .map(|x| Json(x))
+        .map(|x| render_record(x))
         .map_err(|e| render_errors(e, Status::NotFound))
 }
