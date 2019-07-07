@@ -12,8 +12,8 @@ pub fn create(book: InsertableBook, connection: &PgConnection) -> QueryResult<Bo
         .get_result(connection)
 }
 
-pub fn list(connection: &PgConnection) -> Vec<Book> {
-    books::table.order(books::id.desc()).load::<Book>(connection).unwrap()
+pub fn list(connection: &PgConnection) -> QueryResult<Vec<Book>> {
+    books::table.order(books::id.desc()).load::<Book>(connection)
 }
 
 #[derive(Insertable, Serialize, Deserialize)]
