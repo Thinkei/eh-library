@@ -13,28 +13,20 @@ module Config = {
     | NotFound;
 
   let toRoute = (url: ReasonReact.Router.url) => {
-    let hashes = url.hash |> Js.String.split("/") |> Array.to_list;
     switch (url.path) {
-    | [""]
-    | []
-    | ["/"] =>
-      switch (hashes) {
-      | []
-      | [""] => Home
-      | ["", "books"] => Books
-      | ["", "my-profile"] => MyProfile
-      | _ => NotFound
-      }
+    | [] => Home
+    | ["books"] => Books
+    | ["my-profile"] => MyProfile
     | _ => NotFound
     };
   };
 
   let toUrl =
     fun
-    | Home => "#/"
-    | Books => "#/books"
-    | MyProfile => "#/my-profile"
-    | NotFound => "#/404";
+    | Home => "/"
+    | Books => "/books"
+    | MyProfile => "/my-profile"
+    | NotFound => "/404";
 };
 
 module Link = {
