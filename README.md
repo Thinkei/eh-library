@@ -12,14 +12,14 @@ cd client
 npm install
 ```
 
-3. Start the development server to serve the page at http://localhost:1234
+3. Start the bsb to continuously build the file changes
 
+```
+npm start
+```
+
+4. Open new tab at client folder and start the development server to serve the page at http://localhost:1234
 
 ```
 npm run dev
-```
-
-4. Open a new terminal tab to continuously build the file changes
-```
-npm start
 ```
