@@ -19,7 +19,6 @@ module Config = {
     | []
     | ["/"] =>
       switch (hashes) {
-      | []
       | [""] => Home
       | ["", "books"] => Books
       | ["", "my-profile"] => MyProfile
@@ -31,7 +30,7 @@ module Config = {
 
   let toUrl =
     fun
-    | Home => "#/"
+    | Home => "#"
     | Books => "#/books"
     | MyProfile => "#/my-profile"
     | NotFound => "#/404";
