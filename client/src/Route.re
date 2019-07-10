@@ -11,6 +11,7 @@ module Config = {
     | Books
     | NewBook
     | MyProfile
+    | Shipper
     | NotFound;
 
   let toRoute = (url: ReasonReact.Router.url) => {
@@ -25,6 +26,7 @@ module Config = {
       | ["", "books"] => Books
       | ["", "my-profile"] => MyProfile
       | ["", "new-book"] => NewBook
+      | ["", "shipper"] => Shipper
       | _ => NotFound
       }
     | _ => NotFound
@@ -37,6 +39,7 @@ module Config = {
     | Books => "#/books"
     | MyProfile => "#/my-profile"
     | NewBook => "#/new-book"
+    | Shipper => "#/shipper"
     | NotFound => "#/404";
 };
 
