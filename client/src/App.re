@@ -17,6 +17,7 @@ let make = () =>
            | Home => <Home />
            | Books => <Books />
            | MyProfile => <MyProfile />
+           | NewBook => <NewBook />
            | NotFound => <div> {ReasonReact.string("Not Found")} </div>
            }
          )}

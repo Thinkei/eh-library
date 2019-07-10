@@ -9,6 +9,7 @@ module Config = {
   type route =
     | Home
     | Books
+    | NewBook
     | MyProfile
     | NotFound;
 
@@ -23,6 +24,7 @@ module Config = {
       | [""] => Home
       | ["", "books"] => Books
       | ["", "my-profile"] => MyProfile
+      | ["", "new-book"] => NewBook
       | _ => NotFound
       }
     | _ => NotFound
@@ -34,6 +36,7 @@ module Config = {
     | Home => "#/"
     | Books => "#/books"
     | MyProfile => "#/my-profile"
+    | NewBook => "#/new-book"
     | NotFound => "#/404";
 };
 
