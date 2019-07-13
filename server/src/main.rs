@@ -1,32 +1,22 @@
-#![feature(proc_macro_hygiene, decl_macro)]
-
 #[macro_use] extern crate diesel;
-#[macro_use] extern crate rocket;
-#[macro_use] extern crate rocket_contrib;
 #[macro_use] extern crate serde_derive;
 
+use actix_web::{web, App, HttpResponse, HttpServer, Responder};
 use dotenv::dotenv;
-use rocket::Rocket;
 
-pub mod db;
-pub mod schema;
-pub mod google_json_response;
-mod models;
-mod books;
-
-fn rocket() -> Rocket {
-    rocket::ignite()
-        .mount("/books", routes![
-            books::handler::list,
-            books::handler::create,
-            books::handler::get,
-            books::handler::update,
-        ])
-        .attach(db::Connection::fairing())
+fn hello() -> impl Responder {
+    HttpResponse::Ok().body("Hello World!")
 }
 
 fn main() {
     dotenv().ok();
 
-    rocket().launch();
+    HttpServer::new(|| {
+        App::new()
+            .route("/hello", web::get().to(hello))
+    })
+        .bind("0.0.0.0:8888")
+        .unwrap()
+        .run()
+        .unwrap();
 }
