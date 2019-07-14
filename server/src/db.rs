@@ -1,4 +1,9 @@
-use rocket_contrib::databases::diesel;
+use actix::{Actor, SyncContext};
+use diesel::r2d2::{ConnectionManager, Pool};
+use diesel::PgConnection;
 
-#[database("diesel_postgres_pool")]
-pub struct Connection(diesel::PgConnection);
+pub struct DbExecutor(pub Pool<ConnectionManager<PgConnection>>);
+
+impl Actor for DbExecutor {
+    type Context = SyncContext<Self>;
+}
