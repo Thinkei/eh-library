@@ -1,8 +1,8 @@
-type book = {
-  title: string,
-};
+type book = { title: string, };
 
 [@react.component]
-let make = () => {
-  <div>{ReasonReact.string("Book re")}</div>
+let make = (~title) => {
+  <div>
+    <span>{ReasonReact.string(title)}</span>
+  </div>
 };
