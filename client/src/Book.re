@@ -7,10 +7,9 @@ module Tag = {
   }
 }
 
-[@react.component]
-let make = (~title, ~tags) => {
-  <div>
-    <span>{ReasonReact.string(title)}</span>
+module TagList = {
+  [@react.component]
+  let make = (~tags) => {
     <ul>
     {
       tags
@@ -19,6 +18,14 @@ let make = (~title, ~tags) => {
       |> ReasonReact.array
     }
     </ul>
+  }
+}
+
+[@react.component]
+let make = (~title, ~tags) => {
+  <div>
+    <span>{ReasonReact.string(title)}</span>
+    <TagList tags=tags/>
   </div>
 };
 
