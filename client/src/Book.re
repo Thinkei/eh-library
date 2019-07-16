@@ -10,11 +10,11 @@ module Tag = {
 [@react.component]
 let make = (~title, ~tags) => {
   <div>
-    <span>{ReasonReact.string(title)}</span>
+    <div>{ReasonReact.string(title)}</div>
     <ul>
     {
       tags
-      |> List.map(tag => <Tag tag=tag/>)
+      |> List.map(tag => <Tag key=tag tag=tag/>)
       |> Array.of_list
       |> ReasonReact.array
     }

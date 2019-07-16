@@ -9,7 +9,7 @@ let books = [book1, book2, book3];
 let make = () => {
   <div>
     {books
-     |> List.map(book => <Book title={book.title} tags={book.tags} />)
+     |> List.map(book => <Book key={book.title} title={book.title} tags={book.tags} />)
      |> Array.of_list
      |> ReasonReact.array}
   </div>;
