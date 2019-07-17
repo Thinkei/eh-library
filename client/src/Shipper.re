@@ -99,48 +99,56 @@ module NewShipperForm = {
 module EditShipperForm = {
   [@react.component]
   let make = (~shipperEdit, ~saveEditingShipper, ~updateEditingShipper) => {
-    let handleSave = () => {
-      saveEditingShipper({
-        id: shipperEdit.id,
-        name: shipperEdit.name,
-        info: shipperEdit.info,
-      });
-      updateEditingShipper({id: (-1), name: "", info: ""});
-    };
+    switch (shipperEdit) {
+    | None => ReasonReact.null
+    | Some(shipperEdit) =>
+      let handleSave = () => {
+        saveEditingShipper({
+          id: shipperEdit.id,
+          name: shipperEdit.name,
+          info: shipperEdit.info,
+        });
+        updateEditingShipper(None);
+      };
 
-    <div className=Styles.form>
-      <h4> {s("Edit Shipper")} </h4>
-      <input
-        className=Styles.field
-        value={shipperEdit.name}
-        type_="text"
-        placeholder="Shipper's Name"
-        onChange={e =>
-          updateEditingShipper({
-            id: shipperEdit.id,
-            info: shipperEdit.info,
-            name: e->ReactEvent.Form.target##value,
-          })
-        }
-      />
-      <textarea
-        className=Styles.textarea
-        value={shipperEdit.info}
-        type_="text"
-        placeholder="Shipper's Info"
-        onChange={e =>
-          updateEditingShipper({
-            id: shipperEdit.id,
-            name: shipperEdit.name,
-            info: e->ReactEvent.Form.target##value,
-          })
-        }
-      />
-      <button
-        className=Styles.button type_="submit" onClick={_ => handleSave()}>
-        {s("Save")}
-      </button>
-    </div>;
+      <div className=Styles.form>
+        <h4> {s("Edit Shipper")} </h4>
+        <input
+          className=Styles.field
+          value={shipperEdit.name}
+          type_="text"
+          placeholder="Shipper's Name"
+          onChange={e =>
+            updateEditingShipper(
+              Some({
+                id: shipperEdit.id,
+                info: shipperEdit.info,
+                name: e->ReactEvent.Form.target##value,
+              }),
+            )
+          }
+        />
+        <textarea
+          className=Styles.textarea
+          value={shipperEdit.info}
+          type_="text"
+          placeholder="Shipper's Info"
+          onChange={e =>
+            updateEditingShipper(
+              Some({
+                id: shipperEdit.id,
+                name: shipperEdit.name,
+                info: e->ReactEvent.Form.target##value,
+              }),
+            )
+          }
+        />
+        <button
+          className=Styles.button type_="submit" onClick={_ => handleSave()}>
+          {s("Save")}
+        </button>
+      </div>;
+    };
   };
 };
 
@@ -150,17 +158,22 @@ let make = () => {
   let (shipperEdit, setShipperEdit) = React.useState(() => None);
 
   let handleEdit = updateInfo =>
-    setShippers(_ =>
-      List.map(
-        shipper =>
-          if (shipper.id === shipperEdit.id) {
-            {id: shipper.id, name: updateInfo.name, info: updateInfo.info};
-          } else {
-            shipper;
-          },
-        shippers,
+    switch (shipperEdit) {
+    | None => Js.log("No shipper to edit")
+    | Some(edittingShipper) =>
+      setShippers(_ =>
+        List.map(
+          shipper =>
+            if (shipper.id === edittingShipper.id) {
+              {id: shipper.id, name: updateInfo.name, info: updateInfo.info};
+            } else {
+              shipper;
+            },
+          shippers,
+        )
       )
-    );
+    };
+
   <div className=Styles.wrapper>
     <NewShipperForm
       shippers
@@ -179,7 +192,7 @@ let make = () => {
               id={shipper.id}
               name={shipper.name}
               info={shipper.info}
-              setShipperToEdit={sh => setShipperEdit(_ => sh)}
+              setShipperToEdit={sh => setShipperEdit(_ => Some(sh))}
             />
           )
        |> Array.of_list
@@ -188,7 +201,11 @@ let make = () => {
     <EditShipperForm
       saveEditingShipper=handleEdit
       shipperEdit
-      updateEditingShipper={sh => setShipperEdit(_ => sh)}
+      updateEditingShipper={
+        fun
+        | Some(sh) => setShipperEdit(_ => Some(sh))
+        | None => ()
+      }
     />
   </div>;
 };
