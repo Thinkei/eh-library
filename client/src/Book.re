@@ -41,19 +41,19 @@ module Tag = {
     <span className=BookStyles.tag> {ReasonReact.string(tag)} </span>;
   };
 };
-
+module TagList = {
+  [@react.component]
+  let make = (~tags) => {
+    tags |> List.map(tag => <Tag tag />) |> Array.of_list |> ReasonReact.array;
+  };
+};
 [@react.component]
 let make = (~title, ~tags, ~previewImage) => {
   <div className=BookStyles.book>
     <img className=BookStyles.previewImage src=previewImage alt=title />
     <div className=BookStyles.bookInformationContainer>
       <div className=BookStyles.title> {ReasonReact.string(title)} </div>
-      <div className=BookStyles.tagContainer>
-        {tags
-         |> List.map(tag => <Tag key=tag tag />)
-         |> Array.of_list
-         |> ReasonReact.array}
-      </div>
+      <div className=BookStyles.tagContainer> <TagList tags /> </div>
     </div>
   </div>;
 };
