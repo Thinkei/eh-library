@@ -147,8 +147,7 @@ module EditShipperForm = {
 [@react.component]
 let make = () => {
   let (shippers, setShippers) = React.useState(() => initialShippers);
-  let (shipperEdit, setShipperEdit) =
-    React.useState(() => {id: (-1), name: "", info: ""});
+  let (shipperEdit, setShipperEdit) = React.useState(() => None);
 
   let handleEdit = updateInfo =>
     setShippers(_ =>
@@ -187,7 +186,7 @@ let make = () => {
        |> ReasonReact.array}
     </table>
     <EditShipperForm
-      saveEditingShipper={updateInfo => handleEdit(updateInfo)}
+      saveEditingShipper=handleEdit
       shipperEdit
       updateEditingShipper={sh => setShipperEdit(_ => sh)}
     />
