@@ -42,7 +42,9 @@ fn main() {
             .route("/ping", web::get().to(ping))
             .service(
                 web::scope("/api").data(pool.clone()).service(
-                    web::resource("/books").route(web::get().to_async(book_handler::list)),
+                    web::resource("/books")
+                        .route(web::get().to_async(book_handler::list))
+                        .route(web::post().to_async(book_handler::create)),
                 ),
             )
     })
