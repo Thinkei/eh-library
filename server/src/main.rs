@@ -19,8 +19,6 @@ mod errors;
 mod models;
 mod schema;
 
-use crate::book_handler::get_books;
-
 fn ping() -> impl Responder {
     HttpResponse::Ok().body("pong")
 }
@@ -43,9 +41,9 @@ fn main() {
             .wrap(middleware::Logger::default())
             .route("/ping", web::get().to(ping))
             .service(
-                web::scope("/api")
-                    .data(pool.clone())
-                    .service(web::resource("/books").route(web::get().to_async(get_books))),
+                web::scope("/api").data(pool.clone()).service(
+                    web::resource("/books").route(web::get().to_async(book_handler::list)),
+                ),
             )
     })
     .bind("0.0.0.0:8888")
