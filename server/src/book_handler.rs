@@ -39,7 +39,29 @@ pub fn create(
             .map_err(|_| ServiceError::InternalServerError)
     })
     .then(|res: Result<Book, BlockingError<ServiceError>>| match res {
-        Ok(books) => Ok(HttpResponse::Ok().json(books)),
+        Ok(book) => Ok(HttpResponse::Ok().json(book)),
+        Err(_) => Err(ServiceError::InternalServerError),
+    })
+}
+
+#[derive(Deserialize)]
+pub struct GetParams {
+    id: i32,
+}
+
+pub fn get(
+    params: web::Path<GetParams>,
+    pool: web::Data<Pool>,
+) -> impl Future<Item = HttpResponse, Error = ServiceError> {
+    web::block(move || {
+        let conn: &PgConnection = &pool.get().unwrap();
+        books::table
+            .find(params.id)
+            .get_result(conn)
+            .map_err(|_| ServiceError::InternalServerError)
+    })
+    .then(|res: Result<Book, BlockingError<ServiceError>>| match res {
+        Ok(book) => Ok(HttpResponse::Ok().json(book)),
         Err(_) => Err(ServiceError::InternalServerError),
     })
 }

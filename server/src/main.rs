@@ -41,11 +41,16 @@ fn main() {
             .wrap(middleware::Logger::default())
             .route("/ping", web::get().to(ping))
             .service(
-                web::scope("/api").data(pool.clone()).service(
-                    web::resource("/books")
-                        .route(web::get().to_async(book_handler::list))
-                        .route(web::post().to_async(book_handler::create)),
-                ),
+                web::scope("/api")
+                    .data(pool.clone())
+                    .service(
+                        web::resource("/books")
+                            .route(web::get().to_async(book_handler::list))
+                            .route(web::post().to_async(book_handler::create)),
+                    )
+                    .service(
+                        web::resource("/books/{id}").route(web::get().to_async(book_handler::get)),
+                    ),
             )
     })
     .bind("0.0.0.0:8888")
