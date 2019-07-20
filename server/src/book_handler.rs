@@ -50,19 +50,14 @@ pub fn create(
     })
 }
 
-#[derive(Deserialize)]
-pub struct GetParams {
-    id: i32,
-}
-
 pub fn get(
-    params: web::Path<GetParams>,
+    id: web::Path<i32>,
     pool: web::Data<Pool>,
 ) -> impl Future<Item = HttpResponse, Error = ServiceError> {
     web::block(move || {
         let conn: &PgConnection = &pool.get().unwrap();
         books::table
-            .find(params.id)
+            .find(id.into_inner())
             .get_result(conn)
             .map_err(|_| ServiceError::NotFound("Book not found".to_string()))
     })
@@ -75,24 +70,19 @@ pub fn get(
     })
 }
 
-#[derive(Deserialize)]
-pub struct UpdateParams {
-    id: i32,
-}
-
 pub fn update(
-    params: web::Path<UpdateParams>,
+    id: web::Path<i32>,
     book_data: web::Json<InsertableBook>,
     pool: web::Data<Pool>,
 ) -> impl Future<Item = HttpResponse, Error = ServiceError> {
     web::block(move || {
         let conn: &PgConnection = &pool.get().unwrap();
         let book: Book = Book {
-            id: params.id,
+            id: id.into_inner(),
             name: book_data.into_inner().name,
         };
 
-        diesel::update(books::table.find(params.id))
+        diesel::update(books::table.find(book.id))
             .set(&book)
             .get_result(conn)
             .map_err(|_| ServiceError::UnprocessableEntity)
