@@ -5,6 +5,7 @@ extern crate diesel;
 #[macro_use]
 extern crate serde_derive;
 extern crate derive_more;
+extern crate env_logger;
 extern crate futures;
 
 use actix_web::{middleware, web, App, HttpResponse, HttpServer, Responder};
@@ -26,6 +27,8 @@ fn ping() -> impl Responder {
 
 fn main() {
     dotenv().ok();
+    env_logger::init();
+
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
     let sys = actix::System::new("eh-library");
 
