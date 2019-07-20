@@ -16,7 +16,10 @@ pub fn list(pool: web::Data<Pool>) -> impl Future<Item = HttpResponse, Error = S
     })
     .then(|res| match res {
         Ok(books) => Ok(HttpResponse::Ok().json(books)),
-        Err(_) => Err(ServiceError::InternalServerError),
+        Err(err) => match err {
+            BlockingError::Error(service_error) => Err(service_error),
+            BlockingError::Canceled => Err(ServiceError::InternalServerError),
+        },
     })
 }
 #[derive(Insertable, Serialize, Deserialize)]
@@ -36,11 +39,14 @@ pub fn create(
         diesel::insert_into(books::table)
             .values(&insertable_book)
             .get_result(conn)
-            .map_err(|_| ServiceError::InternalServerError)
+            .map_err(|_| ServiceError::UnprocessableEntity)
     })
     .then(|res: Result<Book, BlockingError<ServiceError>>| match res {
-        Ok(book) => Ok(HttpResponse::Ok().json(book)),
-        Err(_) => Err(ServiceError::InternalServerError),
+        Ok(book) => Ok(HttpResponse::Created().json(book)),
+        Err(err) => match err {
+            BlockingError::Error(service_error) => Err(service_error),
+            BlockingError::Canceled => Err(ServiceError::InternalServerError),
+        },
     })
 }
 
@@ -58,11 +64,14 @@ pub fn get(
         books::table
             .find(params.id)
             .get_result(conn)
-            .map_err(|_| ServiceError::InternalServerError)
+            .map_err(|_| ServiceError::NotFound("Book not found".to_string()))
     })
     .then(|res: Result<Book, BlockingError<ServiceError>>| match res {
         Ok(book) => Ok(HttpResponse::Ok().json(book)),
-        Err(_) => Err(ServiceError::InternalServerError),
+        Err(err) => match err {
+            BlockingError::Error(service_error) => Err(service_error),
+            BlockingError::Canceled => Err(ServiceError::InternalServerError),
+        },
     })
 }
 
@@ -86,10 +95,13 @@ pub fn update(
         diesel::update(books::table.find(params.id))
             .set(&book)
             .get_result(conn)
-            .map_err(|_| ServiceError::InternalServerError)
+            .map_err(|_| ServiceError::UnprocessableEntity)
     })
     .then(|res: Result<Book, BlockingError<ServiceError>>| match res {
         Ok(book) => Ok(HttpResponse::Ok().json(book)),
-        Err(_) => Err(ServiceError::InternalServerError),
+        Err(err) => match err {
+            BlockingError::Error(service_error) => Err(service_error),
+            BlockingError::Canceled => Err(ServiceError::InternalServerError),
+        },
     })
 }

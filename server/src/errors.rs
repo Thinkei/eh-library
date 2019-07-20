@@ -10,6 +10,12 @@ pub enum ServiceError {
 
     #[display(fmt = "BadRequest: {}", _0)]
     BadRequest(String),
+
+    #[display(fmt = "Unprocessable Entity")]
+    UnprocessableEntity,
+
+    #[display(fmt = "Record not found")]
+    NotFound(String),
 }
 
 impl ResponseError for ServiceError {
@@ -19,6 +25,10 @@ impl ResponseError for ServiceError {
                 HttpResponse::InternalServerError().json("Internal Server Error, Please try later")
             }
             ServiceError::BadRequest(ref message) => HttpResponse::BadRequest().json(message),
+            ServiceError::UnprocessableEntity => {
+                HttpResponse::UnprocessableEntity().json("Unprocessable Entity")
+            }
+            ServiceError::NotFound(ref message) => HttpResponse::NotFound().json(message),
         }
     }
 }
