@@ -1,32 +1,63 @@
-#![feature(proc_macro_hygiene, decl_macro)]
+extern crate actix_web;
+extern crate dotenv;
+#[macro_use]
+extern crate diesel;
+#[macro_use]
+extern crate serde_derive;
+extern crate derive_more;
+extern crate env_logger;
+extern crate futures;
 
-#[macro_use] extern crate diesel;
-#[macro_use] extern crate rocket;
-#[macro_use] extern crate rocket_contrib;
-#[macro_use] extern crate serde_derive;
-
+use actix_web::{middleware, web, App, HttpResponse, HttpServer, Responder};
+use diesel::r2d2::{ConnectionManager, Pool};
+use diesel::PgConnection;
 use dotenv::dotenv;
-use rocket::Rocket;
+use std::env;
 
-pub mod db;
-pub mod schema;
-pub mod google_json_response;
+mod book_handler;
+mod errors;
 mod models;
-mod books;
+mod schema;
 
-fn rocket() -> Rocket {
-    rocket::ignite()
-        .mount("/books", routes![
-            books::handler::list,
-            books::handler::create,
-            books::handler::get,
-            books::handler::update,
-        ])
-        .attach(db::Connection::fairing())
+fn ping() -> impl Responder {
+    HttpResponse::Ok().body("pong")
 }
 
 fn main() {
     dotenv().ok();
+    env_logger::init();
 
-    rocket().launch();
+    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    let sys = actix::System::new("eh-library");
+
+    // connection pool
+    let manager = ConnectionManager::<PgConnection>::new(database_url);
+    let pool = Pool::builder()
+        .build(manager)
+        .expect("Failed to create pool");
+
+    HttpServer::new(move || {
+        App::new()
+            .wrap(middleware::Logger::default())
+            .route("/ping", web::get().to(ping))
+            .service(
+                web::scope("/api")
+                    .data(pool.clone())
+                    .service(
+                        web::resource("/books")
+                            .route(web::get().to_async(book_handler::list))
+                            .route(web::post().to_async(book_handler::create)),
+                    )
+                    .service(
+                        web::resource("/books/{id}")
+                            .route(web::get().to_async(book_handler::get))
+                            .route(web::put().to_async(book_handler::update)),
+                    ),
+            )
+    })
+    .bind("0.0.0.0:8888")
+    .unwrap()
+    .start();
+
+    let _ = sys.run();
 }

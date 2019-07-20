@@ -1,4 +1,7 @@
-use crate::schema::books;
+use crate::schema::*;
+use diesel::{r2d2::ConnectionManager, PgConnection};
+
+pub type Pool = diesel::r2d2::Pool<ConnectionManager<PgConnection>>;
 
 #[table_name = "books"]
 #[derive(Serialize, Deserialize, Queryable, AsChangeset)]
