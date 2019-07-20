@@ -37,10 +37,13 @@ fn main() {
 
     HttpServer::new(move || {
         App::new()
-            .wrap(middleware::Logger::new("\"%r\" %s %b %Dms"))
-            .data(pool.clone())
+            .wrap(middleware::Logger::default())
             .route("/ping", web::get().to(ping))
-            .service(web::resource("/books").route(web::get().to_async(get_books)))
+            .service(
+                web::scope("/api")
+                    .data(pool.clone())
+                    .service(web::resource("/books").route(web::get().to_async(get_books))),
+            )
     })
     .bind("0.0.0.0:8888")
     .unwrap()
