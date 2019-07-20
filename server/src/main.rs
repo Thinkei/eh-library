@@ -1,27 +1,27 @@
-extern crate actix;
 extern crate actix_web;
 extern crate dotenv;
 #[macro_use]
 extern crate diesel;
 #[macro_use]
 extern crate serde_derive;
+extern crate derive_more;
+extern crate futures;
 
-use actix::Addr;
 use actix_web::{middleware, web, App, HttpResponse, HttpServer, Responder};
 use diesel::r2d2::{ConnectionManager, Pool};
 use diesel::PgConnection;
 use dotenv::dotenv;
 use std::env;
 
-mod app;
-mod db;
+mod book_handler;
+mod errors;
+mod models;
 mod schema;
 
-use crate::db::DbExecutor;
-use app::AppState;
+use crate::book_handler::get_books;
 
-fn hello() -> impl Responder {
-    HttpResponse::Ok().body("Hello World!")
+fn ping() -> impl Responder {
+    HttpResponse::Ok().body("pong")
 }
 
 fn main() {
@@ -35,15 +35,12 @@ fn main() {
         .build(manager)
         .expect("Failed to create pool");
 
-    let address: Addr<DbExecutor> = actix::SyncArbiter::start(4, move || DbExecutor(pool.clone()));
-
     HttpServer::new(move || {
         App::new()
-            .data(AppState {
-                db: address.clone(),
-            })
             .wrap(middleware::Logger::new("\"%r\" %s %b %Dms"))
-            .route("/hello", web::get().to(hello))
+            .data(pool.clone())
+            .route("/ping", web::get().to(ping))
+            .service(web::resource("/books").route(web::get().to_async(get_books)))
     })
     .bind("0.0.0.0:8888")
     .unwrap()
