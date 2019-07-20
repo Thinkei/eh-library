@@ -65,3 +65,31 @@ pub fn get(
         Err(_) => Err(ServiceError::InternalServerError),
     })
 }
+
+#[derive(Deserialize)]
+pub struct UpdateParams {
+    id: i32,
+}
+
+pub fn update(
+    params: web::Path<UpdateParams>,
+    book_data: web::Json<InsertableBook>,
+    pool: web::Data<Pool>,
+) -> impl Future<Item = HttpResponse, Error = ServiceError> {
+    web::block(move || {
+        let conn: &PgConnection = &pool.get().unwrap();
+        let book: Book = Book {
+            id: params.id,
+            name: book_data.into_inner().name,
+        };
+
+        diesel::update(books::table.find(params.id))
+            .set(&book)
+            .get_result(conn)
+            .map_err(|_| ServiceError::InternalServerError)
+    })
+    .then(|res: Result<Book, BlockingError<ServiceError>>| match res {
+        Ok(book) => Ok(HttpResponse::Ok().json(book)),
+        Err(_) => Err(ServiceError::InternalServerError),
+    })
+}

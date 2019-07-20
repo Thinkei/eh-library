@@ -49,7 +49,9 @@ fn main() {
                             .route(web::post().to_async(book_handler::create)),
                     )
                     .service(
-                        web::resource("/books/{id}").route(web::get().to_async(book_handler::get)),
+                        web::resource("/books/{id}")
+                            .route(web::get().to_async(book_handler::get))
+                            .route(web::put().to_async(book_handler::update)),
                     ),
             )
     })
