@@ -1,4 +1,5 @@
 include Book;
+include AddNewBookForm;
 
 let book1 = {
   title: "Exploring ReasonML and functional programming",
@@ -15,7 +16,7 @@ let book3 = {
   tags: ["backend", "ownership"],
   previewImage: "http://bit.ly/2LozvnU",
 };
-let books = [book1, book2, book3];
+let initialBooks = [book1, book2, book3];
 
 module Styles = {
   open Css;
@@ -25,6 +26,8 @@ module Styles = {
 
 [@react.component]
 let make = () => {
+  let (books, setBooks) = React.useState(() => initialBooks);
+
   <div className=Styles.container>
     {books
      |> List.map(book =>
@@ -37,5 +40,6 @@ let make = () => {
         )
      |> Array.of_list
      |> ReasonReact.array}
+     <AddNewBookForm />
   </div>;
 };
