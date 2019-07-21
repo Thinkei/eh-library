@@ -89,7 +89,8 @@ fn main() {
             .service(
                 web::resource("/graphql")
                     .data(app_state.clone())
-                    .route(web::post().to_async(graph_handler::graphql)),
+                    .route(web::post().to_async(graph_handler::graphql))
+                    .route(web::get().to_async(graph_handler::schema)),
             )
             .service(
                 web::resource("/graphiql")
