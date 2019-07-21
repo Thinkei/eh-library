@@ -1,16 +1,10 @@
-use crate::models::{self, Pool};
+use crate::models::{Book, Pool};
+use crate::schema::books;
 use diesel::PgConnection;
 use diesel::{self, prelude::*};
 use juniper::FieldError;
 use juniper::FieldResult;
 use juniper::RootNode;
-
-#[derive(GraphQLObject)]
-#[graphql(description = "Book model")]
-struct Book {
-    id: i32,
-    name: String,
-}
 
 #[derive(GraphQLInputObject)]
 #[graphql(description = "NewBook model")]
@@ -25,11 +19,10 @@ graphql_object!(QueryRoot: Pool |&self| {
         let conn: &PgConnection = &executor.context()
             .get()
             .unwrap() ;
-        use crate::schema::books;
+
         books::table
             .find(id)
             .get_result(conn)
-            .map (|x: models::Book| Book { id: x.id, name: x.name })
             .map_err(|err| FieldError::new(err, juniper::Value::null()))
     }
 });
