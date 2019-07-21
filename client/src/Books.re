@@ -1,5 +1,69 @@
 include Book;
-include AddNewBookForm;
+
+let to_s = ReasonReact.string;
+
+module FormStyle = {
+  open Css;
+
+  let form = [
+    20 |> px |> paddingLeft,
+    flexBox |> display
+  ] |> style;
+
+  let item = [
+    10 |> px |> marginLeft
+  ] |> style;
+
+  let button = [
+    10 |> px |> marginLeft,
+    `pointer |> cursor,
+    "fff" |> hex |> color,
+    "007bff" |> hex |> backgroundColor,
+    "007bff" |> hex |> borderColor,
+    0.75 |> rem |> borderRadius
+  ] |> style;
+};
+
+let book = {
+  title: "Exploring ReasonML and functional programming",
+  tags: ["frontend", "ocaml"],
+  previewImage: "http://bit.ly/2XMWrE7",
+};
+
+module AddNewBookForm = {
+  [@react.component]
+  let make = (~addBook) => {
+    <div className=FormStyle.form>
+      <div>
+        <input
+        value=""
+        placeholder="Title"
+        />
+      </div>
+
+      <div className=FormStyle.item>
+        <input
+        value=""
+        placeholder="Image URL"
+        />
+      </div>
+
+      <div className=FormStyle.item>
+        <input
+        value=""
+        placeholder="Tags"
+        />
+      </div>
+
+      <button
+        className=FormStyle.button
+        onClick={_ => addBook(book)}
+      >
+        {to_s("Add new book")}
+      </button>
+    </div>;
+  }
+}
 
 let book1 = {
   title: "Exploring ReasonML and functional programming",
@@ -40,6 +104,6 @@ let make = () => {
         )
      |> Array.of_list
      |> ReasonReact.array}
-     <AddNewBookForm />
+     <AddNewBookForm addBook={book => setBooks(books => [book, ...books])}/>
   </div>;
 };
