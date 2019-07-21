@@ -2,9 +2,10 @@ include Book;
 
 let to_s = ReasonReact.string;
 
-module FormStyle = {
+module Styles = {
   open Css;
 
+  let container = style([padding(px(100)), color(black)]);
   let form = [
     20 |> px |> paddingLeft,
     flexBox |> display
@@ -24,40 +25,50 @@ module FormStyle = {
   ] |> style;
 };
 
-let book = {
-  title: "Exploring ReasonML and functional programming",
-  tags: ["frontend", "ocaml"],
-  previewImage: "http://bit.ly/2XMWrE7",
-};
-
 module AddNewBookForm = {
   [@react.component]
   let make = (~addBook) => {
-    <div className=FormStyle.form>
+    let (title, setTitle) = React.useState(() => "");
+    let (tags, setTags) = React.useState(() => "");
+    let (previewImage, setPreviewImage) = React.useState(() => "");
+
+    <div className=Styles.form>
       <div>
         <input
-        value=""
+        value=title
+        type_="text"
         placeholder="Title"
+        onChange={e => setTitle(e->ReactEvent.Form.target##value)}
         />
       </div>
 
-      <div className=FormStyle.item>
+      <div className=Styles.item>
         <input
-        value=""
+        value=previewImage
+        type_="text"
         placeholder="Image URL"
+        onChange={e => setPreviewImage(e->ReactEvent.Form.target##value)}
         />
       </div>
 
-      <div className=FormStyle.item>
+      <div className=Styles.item>
         <input
-        value=""
+        value=tags
+        type_="text"
         placeholder="Tags"
+        onChange={e => setTags(e->ReactEvent.Form.target##value)}
         />
       </div>
 
       <button
-        className=FormStyle.button
-        onClick={_ => addBook(book)}
+        className=Styles.button
+        onClick={
+          _ => addBook({
+            title: title,
+            previewImage: previewImage,
+            tags: [tags]
+          })
+        }
       >
         {to_s("Add new book")}
       </button>
@@ -81,12 +92,6 @@ let book3 = {
   previewImage: "http://bit.ly/2LozvnU",
 };
 let initialBooks = [book1, book2, book3];
-
-module Styles = {
-  open Css;
-
-  let container = style([padding(px(100)), color(black)]);
-};
 
 [@react.component]
 let make = () => {
