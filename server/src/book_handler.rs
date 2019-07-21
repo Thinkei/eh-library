@@ -1,5 +1,6 @@
+use crate::book_repository;
 use crate::errors::ServiceError;
-use crate::models::{Book, Pool};
+use crate::models::{Book, NewBook, Pool};
 use crate::schema::*;
 use actix_web::{error::BlockingError, web, HttpResponse};
 use diesel::{self, prelude::*};
@@ -22,23 +23,13 @@ pub fn list(pool: web::Data<Pool>) -> impl Future<Item = HttpResponse, Error = S
         },
     })
 }
-#[derive(Insertable, Serialize, Deserialize)]
-#[table_name = "books"]
-pub struct InsertableBook {
-    name: String,
-}
-
 pub fn create(
-    book: web::Json<InsertableBook>,
+    new_book: web::Json<NewBook>,
     pool: web::Data<Pool>,
 ) -> impl Future<Item = HttpResponse, Error = ServiceError> {
     web::block(move || {
-        let insertable_book = book.into_inner();
-
         let conn: &PgConnection = &pool.get().unwrap();
-        diesel::insert_into(books::table)
-            .values(&insertable_book)
-            .get_result(conn)
+        book_repository::create(new_book.into_inner(), conn)
             .map_err(|_| ServiceError::UnprocessableEntity)
     })
     .then(|res: Result<Book, BlockingError<ServiceError>>| match res {
@@ -56,9 +47,7 @@ pub fn get(
 ) -> impl Future<Item = HttpResponse, Error = ServiceError> {
     web::block(move || {
         let conn: &PgConnection = &pool.get().unwrap();
-        books::table
-            .find(id.into_inner())
-            .get_result(conn)
+        book_repository::get(id.into_inner(), conn)
             .map_err(|_| ServiceError::NotFound("Book not found".to_string()))
     })
     .then(|res: Result<Book, BlockingError<ServiceError>>| match res {
@@ -72,7 +61,7 @@ pub fn get(
 
 pub fn update(
     id: web::Path<i32>,
-    book_data: web::Json<InsertableBook>,
+    book_data: web::Json<NewBook>,
     pool: web::Data<Pool>,
 ) -> impl Future<Item = HttpResponse, Error = ServiceError> {
     web::block(move || {

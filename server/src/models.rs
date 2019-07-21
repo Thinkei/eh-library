@@ -11,3 +11,11 @@ pub struct Book {
     #[graphql(description = "Name of the book")]
     pub name: String,
 }
+
+#[table_name = "books"]
+#[derive(Insertable, Serialize, Deserialize, GraphQLInputObject)]
+#[graphql(description = "New Book object")]
+pub struct NewBook {
+    #[graphql(description = "Name of the book")]
+    pub name: String,
+}

@@ -20,6 +20,7 @@ use dotenv::dotenv;
 use std::env;
 
 mod book_handler;
+mod book_repository;
 mod errors;
 mod graph_handler;
 mod graph_schema;
