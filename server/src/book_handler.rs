@@ -1,7 +1,6 @@
 use crate::book_repository;
 use crate::errors::ServiceError;
 use crate::models::{Book, NewBook, Pool};
-use crate::schema::*;
 use actix_web::{error::BlockingError, web, HttpResponse};
 use diesel::{self, prelude::*};
 use futures::Future;
@@ -10,10 +9,7 @@ pub fn list(pool: web::Data<Pool>) -> impl Future<Item = HttpResponse, Error = S
     web::block(move || {
         let conn: &PgConnection = &pool.get().unwrap();
 
-        books::table
-            .order(books::id.desc())
-            .load::<Book>(conn)
-            .map_err(|_| ServiceError::InternalServerError)
+        book_repository::list(conn).map_err(|_| ServiceError::InternalServerError)
     })
     .then(|res| match res {
         Ok(books) => Ok(HttpResponse::Ok().json(books)),
@@ -71,10 +67,7 @@ pub fn update(
             name: book_data.into_inner().name,
         };
 
-        diesel::update(books::table.find(book.id))
-            .set(&book)
-            .get_result(conn)
-            .map_err(|_| ServiceError::UnprocessableEntity)
+        book_repository::update(book, conn).map_err(|_| ServiceError::UnprocessableEntity)
     })
     .then(|res: Result<Book, BlockingError<ServiceError>>| match res {
         Ok(book) => Ok(HttpResponse::Ok().json(book)),

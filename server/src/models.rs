@@ -19,3 +19,12 @@ pub struct NewBook {
     #[graphql(description = "Name of the book")]
     pub name: String,
 }
+
+#[table_name = "books"]
+#[derive(Serialize, Deserialize, AsChangeset, GraphQLInputObject)]
+#[graphql(description = "Update Book object")]
+pub struct UpdateBook {
+    pub id: i32,
+    #[graphql(description = "Name of the book")]
+    pub name: String,
+}

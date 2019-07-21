@@ -11,3 +11,13 @@ pub fn create(new_book: NewBook, conn: &PgConnection) -> QueryResult<Book> {
         .values(&new_book)
         .get_result(conn)
 }
+
+pub fn list(conn: &PgConnection) -> QueryResult<Vec<Book>> {
+    books::table.order(books::id.desc()).load::<Book>(conn)
+}
+
+pub fn update(book: Book, conn: &PgConnection) -> QueryResult<Book> {
+    diesel::update(books::table.find(book.id))
+        .set(&book)
+        .get_result(conn)
+}
