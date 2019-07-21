@@ -1,9 +1,15 @@
 use crate::graph_schema::GraphSchema;
+use crate::models::Pool;
 use actix_web::{http, web, Error, HttpResponse};
 use futures::Future;
 use juniper::http::graphiql::graphiql_source;
 use juniper::http::GraphQLRequest;
 use std::sync::Arc;
+
+pub struct AppState {
+    pub graph_schema: Arc<GraphSchema>,
+    pub db: Pool,
+}
 
 pub fn graphiql() -> HttpResponse {
     let html = graphiql_source("http://127.0.0.1:8888/graphql");
@@ -17,11 +23,11 @@ pub fn graphiql() -> HttpResponse {
 }
 
 pub fn graphql(
-    st: web::Data<Arc<GraphSchema>>,
+    st: web::Data<Arc<AppState>>,
     data: web::Json<GraphQLRequest>,
 ) -> impl Future<Item = HttpResponse, Error = Error> {
     web::block(move || {
-        let res = data.execute(&st, &());
+        let res = data.execute(&st.graph_schema, &st.db);
         Ok::<_, serde_json::error::Error>(serde_json::to_string(&res)?)
     })
     .map_err(Error::from)

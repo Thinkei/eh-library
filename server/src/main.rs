@@ -26,6 +26,7 @@ mod graph_schema;
 mod models;
 mod schema;
 
+use graph_handler::AppState;
 use graph_schema::create_graph_schema;
 
 fn ping() -> impl Responder {
@@ -46,6 +47,10 @@ fn main() {
         .expect("Failed to create pool");
 
     let graph_schema = std::sync::Arc::new(create_graph_schema());
+    let app_state = std::sync::Arc::new(AppState {
+        graph_schema: graph_schema.clone(),
+        db: pool.clone(),
+    });
 
     HttpServer::new(move || {
         App::new()
@@ -82,7 +87,7 @@ fn main() {
             )
             .service(
                 web::resource("/graphql")
-                    .data(graph_schema.clone())
+                    .data(app_state.clone())
                     .route(web::post().to_async(graph_handler::graphql)),
             )
             .service(

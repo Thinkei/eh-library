@@ -1,3 +1,7 @@
+use crate::models::{self, Pool};
+use diesel::PgConnection;
+use diesel::{self, prelude::*};
+use juniper::FieldError;
 use juniper::FieldResult;
 use juniper::RootNode;
 
@@ -16,20 +20,23 @@ struct NewBook {
 
 pub struct QueryRoot;
 
-graphql_object!(QueryRoot: () |&self| {
+graphql_object!(QueryRoot: Pool |&self| {
     field book(&executor, id: i32) -> FieldResult<Book> {
-        Ok(
-            Book {
-                id: id,
-                name: "hehe".to_string()
-            }
-        )
+        let conn: &PgConnection = &executor.context()
+            .get()
+            .unwrap() ;
+        use crate::schema::books;
+        books::table
+            .find(id)
+            .get_result(conn)
+            .map (|x: models::Book| Book { id: x.id, name: x.name })
+            .map_err(|err| FieldError::new(err, juniper::Value::null()))
     }
 });
 
 pub struct MutationRoot;
 
-graphql_object!(MutationRoot: () |&self| {
+graphql_object!(MutationRoot: Pool |&self| {
     field createBook(&executor, new_book: NewBook) -> FieldResult<Book> {
         Ok(
             Book {
