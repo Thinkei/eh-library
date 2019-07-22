@@ -1,7 +1,5 @@
 include Book;
 
-let to_s = ReasonReact.string;
-
 module Styles = {
   open Css;
 
@@ -70,7 +68,7 @@ module AddNewBookForm = {
           })
         }
       >
-        {to_s("Add new book")}
+        {ReasonReact.string("Add new book")}
       </button>
     </div>;
   }
