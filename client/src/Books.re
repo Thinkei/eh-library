@@ -64,7 +64,7 @@ module AddNewBookForm = {
           _ => addBook({
             title: title,
             previewImage: previewImage,
-            tags: Js.String.split(",", tags) |> Array.to_list
+            tags: Js.String.split(",", tags) |> Array.to_list |> List.map(Js.String.trim)
           })
         }
       >
