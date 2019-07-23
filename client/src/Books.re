@@ -108,6 +108,6 @@ let make = () => {
           />
         )
      |> ReasonReact.array}
-     <AddNewBookForm addBook={book => setBooks(books => [|book, ...books|])}/>
+     <AddNewBookForm addBook={book => setBooks(books => Array.append(books, [|book|]))}/>
   </div>;
 };
