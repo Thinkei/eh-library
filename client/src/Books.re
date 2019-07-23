@@ -26,14 +26,14 @@ module Styles = {
 module UpdateBookForm = {
   [@react.component]
   let make = (~editingBook, ~updateBook) => {
-    let (title, setTitle) = React.useState(() => editingBook.title);
+    let (title, setTitle) = React.useState(() => "");
     let (tags, setTags) = React.useState(() => "");
     let (previewImage, setPreviewImage) = React.useState(() => "");
 
     <div className=Styles.form>
       <div>
         <input
-        value=title
+        value=editingBook.title
         type_="text"
         placeholder="Title"
         onChange={e => setTitle(e->ReactEvent.Form.target##value)}
@@ -42,7 +42,7 @@ module UpdateBookForm = {
 
       <div className=Styles.item>
         <input
-        value=previewImage
+        value=editingBook.previewImage
         type_="text"
         placeholder="Image URL"
         onChange={e => setPreviewImage(e->ReactEvent.Form.target##value)}
@@ -51,7 +51,8 @@ module UpdateBookForm = {
 
       <div className=Styles.item>
         <input
-        value=tags
+        /*value=""*/
+        value={editingBook.tags |> Array.of_list |> Js.Array.join}
         type_="text"
         placeholder="Tags"
         onChange={e => setTags(e->ReactEvent.Form.target##value)}
@@ -62,7 +63,7 @@ module UpdateBookForm = {
         className=Styles.button
         onClick={
           _ => updateBook({
-            id: 1,
+            id: editingBook.id,
             title: title,
             previewImage: previewImage,
             tags: Js.String.split(",", tags) |> Array.to_list |> List.map(Js.String.trim)
