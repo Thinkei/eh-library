@@ -34,6 +34,15 @@ module BookStyles = {
     ]);
 
   let previewImage = style([maxWidth(px(40))]);
+
+  let editButton = style([
+    10 |> px |> marginLeft,
+    `pointer |> cursor,
+    "fff" |> hex |> color,
+    "007bff" |> hex |> backgroundColor,
+    "007bff" |> hex |> borderColor,
+    0.75 |> rem |> borderRadius
+  ]);
 };
 
 module Tag = {
@@ -55,6 +64,12 @@ let make = (~book) => {
     <div className=BookStyles.bookInformationContainer>
       <div className=BookStyles.title> {ReasonReact.string(book.title)} </div>
       <div className=BookStyles.tagContainer> <TagList tags=book.tags /> </div>
+    </div>
+    <div>
+      <button
+        className=BookStyles.editButton>
+        {ReasonReact.string("Edit")}
+      </button>
     </div>
   </div>;
 };
