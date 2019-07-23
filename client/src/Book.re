@@ -54,7 +54,7 @@ module Tag = {
 module TagList = {
   [@react.component]
   let make = (~tags) => {
-    tags |> List.map(tag => <Tag tag />) |> Array.of_list |> ReasonReact.array;
+    tags |> List.map(tag => <Tag tag key=tag/>) |> Array.of_list |> ReasonReact.array;
   };
 };
 

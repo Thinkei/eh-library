@@ -174,6 +174,7 @@ let make = () => {
     <AddNewBookForm
       addBook={book => setBooks(books => Array.append([|book|], books))}
     />
+    <br />
     <UpdateBookForm
       editingBook
       updateBook={editingBook =>
