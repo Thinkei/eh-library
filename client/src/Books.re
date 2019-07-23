@@ -25,8 +25,8 @@ module Styles = {
 
 module UpdateBookForm = {
   [@react.component]
-  let make = (~updateBook) => {
-    let (title, setTitle) = React.useState(() => "");
+  let make = (~editingBook, ~updateBook) => {
+    let (title, setTitle) = React.useState(() => editingBook.title);
     let (tags, setTags) = React.useState(() => "");
     let (previewImage, setPreviewImage) = React.useState(() => "");
 
@@ -147,10 +147,17 @@ let book3 = {
   previewImage: "http://bit.ly/2LozvnU",
 };
 let initialBooks = [|book1, book2, book3|];
+let editingBook = {
+  id: -1,
+  title: "",
+  tags: [],
+  previewImage: ""
+};
 
 [@react.component]
 let make = () => {
   let (books, setBooks) = React.useState(() => initialBooks);
+  let (editingBook, setEditingBook) = React.useState(() => editingBook);
 
   <div className=Styles.container>
     {books
@@ -158,10 +165,11 @@ let make = () => {
           <Book
             key={string_of_int(book.id)}
             book=book
+            setEditingBook=setEditingBook
           />
         )
      |> ReasonReact.array}
      <AddNewBookForm addBook={book => setBooks(books => Array.append(books, [|book|]))}/>
-     <UpdateBookForm updateBook={book => setBooks(books => Array.append(books, [|book|]))}/>
+     <UpdateBookForm editingBook=editingBook updateBook={editingBook => setBooks(books => Array.append(books, [|editingBook|]))}/>
   </div>;
 };

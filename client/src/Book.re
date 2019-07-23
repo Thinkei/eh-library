@@ -57,8 +57,9 @@ module TagList = {
     tags |> List.map(tag => <Tag tag />) |> Array.of_list |> ReasonReact.array;
   };
 };
+
 [@react.component]
-let make = (~book) => {
+let make = (~book, ~setEditingBook) => {
   <div className=BookStyles.book>
     <img className=BookStyles.previewImage src=book.previewImage alt=book.title />
     <div className=BookStyles.bookInformationContainer>
@@ -67,7 +68,9 @@ let make = (~book) => {
     </div>
     <div>
       <button
-        className=BookStyles.editButton>
+        className=BookStyles.editButton
+        onClick={_ =>setEditingBook(book => book)}
+      >
         {ReasonReact.string("Edit")}
       </button>
     </div>
