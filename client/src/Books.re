@@ -24,7 +24,10 @@ module UpdateBookForm = {
   [@react.component]
   let make = (~editingBook, ~updateBook) => {
     let (title, setTitle) = React.useState(() => editingBook.title);
-    let (tags, setTags) = React.useState(() => editingBook.tags);
+    let (tags, setTags) =
+      React.useState(() =>
+        editingBook.tags |> Array.of_list |> Js.Array.joinWith(", ")
+      );
     let (previewImage, setPreviewImage) =
       React.useState(() => editingBook.previewImage);
 
@@ -32,7 +35,9 @@ module UpdateBookForm = {
       () => {
         setTitle(_ => editingBook.title);
         setPreviewImage(_ => editingBook.previewImage);
-        setTags(_ => editingBook.tags);
+        setTags(_ =>
+          editingBook.tags |> Array.of_list |> Js.Array.joinWith(", ")
+        );
         None;
       },
       [|editingBook|],
@@ -57,7 +62,7 @@ module UpdateBookForm = {
       </div>
       <div className=Styles.item>
         <input
-          value={tags |> Array.of_list |> Js.Array.joinWith(", ")}
+          value=tags
           type_="text"
           placeholder="Tags"
           onChange={e => setTags(e->ReactEvent.Form.target##value)}
@@ -65,21 +70,22 @@ module UpdateBookForm = {
       </div>
       <button
         className=Styles.button
-        onClick={
-          _ => updateBook({
+        onClick={_ =>
+          updateBook({
             id: editingBook.id,
-            title: title,
-            previewImage: previewImage,
-            tags: Js.String.split(",", tags) |> Array.to_list |> List.map(Js.String.trim)
+            title,
+            previewImage,
+            tags:
+              Js.String.split(",", tags)
+              |> Array.to_list
+              |> List.map(Js.String.trim),
           })
-        }
-      >
+        }>
         {ReasonReact.string("Update book")}
       </button>
     </div>;
-  }
-}
-
+  };
+};
 
 module AddNewBookForm = {
   [@react.component]
@@ -133,24 +139,25 @@ module AddNewBookForm = {
 };
 
 let book1 = {
-  id: 1,
+  id: 0,
   title: "Exploring ReasonML and functional programming",
   tags: ["frontend", "ocaml"],
   previewImage: "http://bit.ly/2XMWrE7",
 };
 let book2 = {
-  id: 2,
+  id: 1,
   title: "Learn Web Development with Rails",
   tags: ["backend", "ruby", "rails"],
   previewImage: "http://bit.ly/2y1hmEl",
 };
 let book3 = {
-  id: 3,
+  id: 2,
   title: "The Rust Programming Language",
   tags: ["backend", "ownership"],
   previewImage: "http://bit.ly/2LozvnU",
 };
 let initialBooks = [|book1, book2, book3|];
+
 let editingBook = {id: (-1), title: "", tags: [], previewImage: ""};
 
 [@react.component]
@@ -160,12 +167,23 @@ let make = () => {
 
   <div className=Styles.container>
     {books
-     |> List.map(book =>
+     |> Array.map(book =>
           <Book key={string_of_int(book.id)} book setEditingBook />
         )
-     |> Array.of_list
      |> ReasonReact.array}
-     <AddNewBookForm addBook={book => setBooks(books => Array.append(books, [|book|]))}/>
-     <UpdateBookForm editingBook=editingBook updateBook={editingBook => setBooks(books => Array.append(books, [|editingBook|]))}/>
+    <AddNewBookForm
+      addBook={book => setBooks(books => Array.append([|book|], books))}
+    />
+    <UpdateBookForm
+      editingBook
+      updateBook={editingBook =>
+        setBooks(books =>
+          Array.map(
+            book => book.id === editingBook.id ? editingBook : book,
+            books,
+          )
+        )
+      }
+    />
   </div>;
 };
