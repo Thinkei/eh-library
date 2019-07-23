@@ -4,23 +4,20 @@ module Styles = {
   open Css;
 
   let container = style([padding(px(100)), color(black)]);
-  let form = [
-    20 |> px |> paddingLeft,
-    flexBox |> display
-  ] |> style;
+  let form = [20 |> px |> paddingLeft, flexBox |> display] |> style;
 
-  let item = [
-    10 |> px |> marginLeft
-  ] |> style;
+  let item = [10 |> px |> marginLeft] |> style;
 
-  let button = [
-    10 |> px |> marginLeft,
-    `pointer |> cursor,
-    "fff" |> hex |> color,
-    "007bff" |> hex |> backgroundColor,
-    "007bff" |> hex |> borderColor,
-    0.75 |> rem |> borderRadius
-  ] |> style;
+  let button =
+    [
+      10 |> px |> marginLeft,
+      `pointer |> cursor,
+      "fff" |> hex |> color,
+      "007bff" |> hex |> backgroundColor,
+      "007bff" |> hex |> borderColor,
+      0.75 |> rem |> borderRadius,
+    ]
+    |> style;
 };
 
 module UpdateBookForm = {
@@ -33,32 +30,28 @@ module UpdateBookForm = {
     <div className=Styles.form>
       <div>
         <input
-        value=editingBook.title
-        type_="text"
-        placeholder="Title"
-        onChange={e => setTitle(e->ReactEvent.Form.target##value)}
+          value=title
+          type_="text"
+          placeholder="Title"
+          onChange={e => setTitle(e->ReactEvent.Form.target##value)}
         />
       </div>
-
       <div className=Styles.item>
         <input
-        value=editingBook.previewImage
-        type_="text"
-        placeholder="Image URL"
-        onChange={e => setPreviewImage(e->ReactEvent.Form.target##value)}
+          value=previewImage
+          type_="text"
+          placeholder="Image URL"
+          onChange={e => setPreviewImage(e->ReactEvent.Form.target##value)}
         />
       </div>
-
       <div className=Styles.item>
         <input
-        /*value=""*/
-        value={editingBook.tags |> Array.of_list |> Js.Array.join}
-        type_="text"
-        placeholder="Tags"
-        onChange={e => setTags(e->ReactEvent.Form.target##value)}
+          value={tags |> Array.of_list |> Js.Array.joinWith(", ")}
+          type_="text"
+          placeholder="Tags"
+          onChange={e => setTags(e->ReactEvent.Form.target##value)}
         />
       </div>
-
       <button
         className=Styles.button
         onClick={
@@ -87,47 +80,46 @@ module AddNewBookForm = {
     <div className=Styles.form>
       <div>
         <input
-        value=title
-        type_="text"
-        placeholder="Title"
-        onChange={e => setTitle(e->ReactEvent.Form.target##value)}
+          value=title
+          type_="text"
+          placeholder="Title"
+          onChange={e => setTitle(e->ReactEvent.Form.target##value)}
         />
       </div>
-
       <div className=Styles.item>
         <input
-        value=previewImage
-        type_="text"
-        placeholder="Image URL"
-        onChange={e => setPreviewImage(e->ReactEvent.Form.target##value)}
+          value=previewImage
+          type_="text"
+          placeholder="Image URL"
+          onChange={e => setPreviewImage(e->ReactEvent.Form.target##value)}
         />
       </div>
-
       <div className=Styles.item>
         <input
-        value=tags
-        type_="text"
-        placeholder="Tags"
-        onChange={e => setTags(e->ReactEvent.Form.target##value)}
+          value=tags
+          type_="text"
+          placeholder="Tags"
+          onChange={e => setTags(e->ReactEvent.Form.target##value)}
         />
       </div>
-
       <button
         className=Styles.button
-        onClick={
-          _ => addBook({
+        onClick={_ =>
+          addBook({
             id: 1,
-            title: title,
-            previewImage: previewImage,
-            tags: Js.String.split(",", tags) |> Array.to_list |> List.map(Js.String.trim)
+            title,
+            previewImage,
+            tags:
+              Js.String.split(",", tags)
+              |> Array.to_list
+              |> List.map(Js.String.trim),
           })
-        }
-      >
+        }>
         {ReasonReact.string("Add new book")}
       </button>
     </div>;
-  }
-}
+  };
+};
 
 let book1 = {
   id: 1,
