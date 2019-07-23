@@ -23,9 +23,20 @@ module Styles = {
 module UpdateBookForm = {
   [@react.component]
   let make = (~editingBook, ~updateBook) => {
-    let (title, setTitle) = React.useState(() => "");
-    let (tags, setTags) = React.useState(() => "");
-    let (previewImage, setPreviewImage) = React.useState(() => "");
+    let (title, setTitle) = React.useState(() => editingBook.title);
+    let (tags, setTags) = React.useState(() => editingBook.tags);
+    let (previewImage, setPreviewImage) =
+      React.useState(() => editingBook.previewImage);
+
+    React.useEffect1(
+      () => {
+        setTitle(_ => editingBook.title);
+        setPreviewImage(_ => editingBook.previewImage);
+        setTags(_ => editingBook.tags);
+        None;
+      },
+      [|editingBook|],
+    );
 
     <div className=Styles.form>
       <div>
@@ -140,12 +151,7 @@ let book3 = {
   previewImage: "http://bit.ly/2LozvnU",
 };
 let initialBooks = [|book1, book2, book3|];
-let editingBook = {
-  id: -1,
-  title: "",
-  tags: [],
-  previewImage: ""
-};
+let editingBook = {id: (-1), title: "", tags: [], previewImage: ""};
 
 [@react.component]
 let make = () => {
@@ -154,13 +160,10 @@ let make = () => {
 
   <div className=Styles.container>
     {books
-     |> Array.map(book =>
-          <Book
-            key={string_of_int(book.id)}
-            book=book
-            setEditingBook=setEditingBook
-          />
+     |> List.map(book =>
+          <Book key={string_of_int(book.id)} book setEditingBook />
         )
+     |> Array.of_list
      |> ReasonReact.array}
      <AddNewBookForm addBook={book => setBooks(books => Array.append(books, [|book|]))}/>
      <UpdateBookForm editingBook=editingBook updateBook={editingBook => setBooks(books => Array.append(books, [|editingBook|]))}/>
