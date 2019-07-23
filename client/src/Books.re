@@ -93,7 +93,7 @@ let book3 = {
   tags: ["backend", "ownership"],
   previewImage: "http://bit.ly/2LozvnU",
 };
-let initialBooks = [book1, book2, book3];
+let initialBooks = [|book1, book2, book3|];
 
 [@react.component]
 let make = () => {
@@ -101,14 +101,13 @@ let make = () => {
 
   <div className=Styles.container>
     {books
-     |> List.map(book =>
+     |> Array.map(book =>
           <Book
             key={string_of_int(book.id)}
             book=book
           />
         )
-     |> Array.of_list
      |> ReasonReact.array}
-     <AddNewBookForm addBook={book => setBooks(books => [book, ...books])}/>
+     <AddNewBookForm addBook={book => setBooks(books => [|book, ...books|])}/>
   </div>;
 };
