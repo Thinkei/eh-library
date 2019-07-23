@@ -62,6 +62,7 @@ module AddNewBookForm = {
         className=Styles.button
         onClick={
           _ => addBook({
+            id: 1,
             title: title,
             previewImage: previewImage,
             tags: Js.String.split(",", tags) |> Array.to_list |> List.map(Js.String.trim)
@@ -75,16 +76,19 @@ module AddNewBookForm = {
 }
 
 let book1 = {
+  id: 1,
   title: "Exploring ReasonML and functional programming",
   tags: ["frontend", "ocaml"],
   previewImage: "http://bit.ly/2XMWrE7",
 };
 let book2 = {
+  id: 2,
   title: "Learn Web Development with Rails",
   tags: ["backend", "ruby", "rails"],
   previewImage: "http://bit.ly/2y1hmEl",
 };
 let book3 = {
+  id: 3,
   title: "The Rust Programming Language",
   tags: ["backend", "ownership"],
   previewImage: "http://bit.ly/2LozvnU",
@@ -99,10 +103,8 @@ let make = () => {
     {books
      |> List.map(book =>
           <Book
-            key={book.title}
-            title={book.title}
-            tags={book.tags}
-            previewImage={book.previewImage}
+            key={string_of_int(book.id)}
+            book=book
           />
         )
      |> Array.of_list

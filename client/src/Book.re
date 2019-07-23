@@ -1,4 +1,5 @@
 type book = {
+  id: int,
   title: string,
   tags: list(string),
   previewImage: string,
@@ -48,12 +49,12 @@ module TagList = {
   };
 };
 [@react.component]
-let make = (~title, ~tags, ~previewImage) => {
+let make = (~book) => {
   <div className=BookStyles.book>
-    <img className=BookStyles.previewImage src=previewImage alt=title />
+    <img className=BookStyles.previewImage src=book.previewImage alt=book.title />
     <div className=BookStyles.bookInformationContainer>
-      <div className=BookStyles.title> {ReasonReact.string(title)} </div>
-      <div className=BookStyles.tagContainer> <TagList tags /> </div>
+      <div className=BookStyles.title> {ReasonReact.string(book.title)} </div>
+      <div className=BookStyles.tagContainer> <TagList tags=book.tags /> </div>
     </div>
   </div>;
 };
