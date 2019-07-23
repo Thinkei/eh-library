@@ -11,6 +11,7 @@ table! {
         email -> Varchar,
         encrypted_password -> Varchar,
         salt -> Varchar,
+        is_admin -> Bool,
         created_at -> Timestamp,
     }
 }
