@@ -23,6 +23,59 @@ module Styles = {
   ] |> style;
 };
 
+module UpdateBookForm = {
+  [@react.component]
+  let make = (~updateBook) => {
+    let (title, setTitle) = React.useState(() => "");
+    let (tags, setTags) = React.useState(() => "");
+    let (previewImage, setPreviewImage) = React.useState(() => "");
+
+    <div className=Styles.form>
+      <div>
+        <input
+        value=title
+        type_="text"
+        placeholder="Title"
+        onChange={e => setTitle(e->ReactEvent.Form.target##value)}
+        />
+      </div>
+
+      <div className=Styles.item>
+        <input
+        value=previewImage
+        type_="text"
+        placeholder="Image URL"
+        onChange={e => setPreviewImage(e->ReactEvent.Form.target##value)}
+        />
+      </div>
+
+      <div className=Styles.item>
+        <input
+        value=tags
+        type_="text"
+        placeholder="Tags"
+        onChange={e => setTags(e->ReactEvent.Form.target##value)}
+        />
+      </div>
+
+      <button
+        className=Styles.button
+        onClick={
+          _ => updateBook({
+            id: 1,
+            title: title,
+            previewImage: previewImage,
+            tags: Js.String.split(",", tags) |> Array.to_list |> List.map(Js.String.trim)
+          })
+        }
+      >
+        {ReasonReact.string("Update book")}
+      </button>
+    </div>;
+  }
+}
+
+
 module AddNewBookForm = {
   [@react.component]
   let make = (~addBook) => {
@@ -109,5 +162,6 @@ let make = () => {
         )
      |> ReasonReact.array}
      <AddNewBookForm addBook={book => setBooks(books => Array.append(books, [|book|]))}/>
+     <UpdateBookForm updateBook={book => setBooks(books => Array.append(books, [|book|]))}/>
   </div>;
 };
