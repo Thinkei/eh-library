@@ -28,3 +28,24 @@ pub struct UpdateBook {
     #[graphql(description = "Name of the book")]
     pub name: String,
 }
+
+#[table_name = "users"]
+#[derive(Debug, Serialize, Deserialize, Queryable, AsChangeset)]
+pub struct User {
+    pub id: i32,
+    pub email: String,
+    pub encrypted_password: String,
+    pub salt: String,
+    pub is_admin: bool,
+    pub created_at: chrono::NaiveDateTime,
+}
+
+#[table_name = "users"]
+#[derive(Insertable, Serialize, Deserialize, GraphQLInputObject)]
+pub struct NewUser {
+    pub email: String,
+    pub encrypted_password: String,
+    pub salt: String,
+    pub is_admin: bool,
+    pub created_at: chrono::NaiveDateTime,
+}

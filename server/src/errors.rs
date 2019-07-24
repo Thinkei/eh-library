@@ -16,11 +16,14 @@ pub enum ServiceError {
 
     #[display(fmt = "Record not found")]
     NotFound(String),
+
+    #[display(fmt = "Unauthorized")]
+    Unauthorized,
 }
 
 impl ResponseError for ServiceError {
     fn error_response(&self) -> HttpResponse {
-        match *self {
+        match self {
             ServiceError::InternalServerError => {
                 HttpResponse::InternalServerError().json("Internal Server Error, Please try later")
             }
@@ -29,6 +32,7 @@ impl ResponseError for ServiceError {
                 HttpResponse::UnprocessableEntity().json("Unprocessable Entity")
             }
             ServiceError::NotFound(ref message) => HttpResponse::NotFound().json(message),
+            ServiceError::Unauthorized => HttpResponse::Unauthorized().json("Unauthorized"),
         }
     }
 }

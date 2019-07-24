@@ -8,6 +8,12 @@ extern crate dotenv;
 extern crate diesel;
 #[macro_use]
 extern crate serde_derive;
+#[cfg(test)]
+#[macro_use]
+extern crate assert_matches;
+#[macro_use]
+extern crate lazy_static;
+
 extern crate derive_more;
 extern crate env_logger;
 extern crate futures;
@@ -19,6 +25,7 @@ use diesel::PgConnection;
 use dotenv::dotenv;
 use std::env;
 
+mod auth_repository;
 mod book_handler;
 mod book_repository;
 mod errors;
@@ -26,6 +33,9 @@ mod graph_handler;
 mod graph_schema;
 mod models;
 mod schema;
+
+#[cfg(test)]
+mod test_helpers;
 
 use graph_handler::AppState;
 use graph_schema::create_graph_schema;
