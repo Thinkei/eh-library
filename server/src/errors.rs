@@ -19,7 +19,12 @@ pub enum ServiceError {
 
     #[display(fmt = "Unauthorized")]
     Unauthorized,
+
+    #[display(fmt = "EmailExisted")]
+    EmailExisted,
 }
+
+pub const EMAIL_EXISTED: &str = "Email is existed";
 
 impl ResponseError for ServiceError {
     fn error_response(&self) -> HttpResponse {
@@ -28,6 +33,7 @@ impl ResponseError for ServiceError {
                 HttpResponse::InternalServerError().json("Internal Server Error, Please try later")
             }
             ServiceError::BadRequest(ref message) => HttpResponse::BadRequest().json(message),
+            ServiceError::EmailExisted => HttpResponse::BadRequest().json(EMAIL_EXISTED),
             ServiceError::UnprocessableEntity => {
                 HttpResponse::UnprocessableEntity().json("Unprocessable Entity")
             }

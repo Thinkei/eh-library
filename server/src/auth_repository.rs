@@ -1,5 +1,5 @@
-use crate::errors::ServiceError;
-use crate::models::{NewUser, User };
+use crate::errors::{self, ServiceError};
+use crate::models::{NewUser, User};
 use argonautica::{Hasher, Verifier};
 use diesel::{self, prelude::*};
 #[derive(Deserialize)]
@@ -14,14 +14,11 @@ pub fn register(auth_data: AuthData, conn: &PgConnection) -> Result<User, Servic
     use crate::schema::users::dsl::{email, users};
 
     let user: QueryResult<User> = users.filter(email.eq(auth_data.email)).first::<User>(conn);
-    // .optional(); // QueryResult<Option<User>>  QueryResult<User>
-    if let Ok(x) = user {
-        return Err(ServiceError::BadRequest(
-            "Email is aldreay existed.".to_string(),
-        ));
+
+    if let Ok(_) = user {
+        return Err(ServiceError::EmailExisted);
     }
 
-    dbg!(user);
     // let salt: String = generate_salt();
     // let encrypted_password: String = encryt_password(password, salt);
 
@@ -74,14 +71,13 @@ mod tests {
             encrypted_password: "123".to_owned(),
             salt: "123".to_owned(),
             is_admin: false,
-            created_at: chrono::Local::now()
+            created_at: chrono::Local::now().naive_local(),
         };
 
         use crate::schema::users;
         diesel::insert_into(users::table)
             .values(&new_user)
-            .get_result(&conn)
-
+            .execute(&conn);
 
         let auth_data = AuthData {
             email: "x@example.com".to_owned(),
@@ -89,6 +85,6 @@ mod tests {
         };
 
         let actual = register(auth_data, &conn);
-        assert_matches!(actual, Err(ServiceError::Unauthorized));
+        assert_matches!(actual, Err(ServiceError::EmailExisted));
     }
 }
