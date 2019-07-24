@@ -74,7 +74,7 @@ module UpdateBookForm = {
 
 module AddNewBookForm = {
   [@react.component]
-  let make = (~addBook) => {
+  let make = (~books, ~addBook) => {
     let (title, setTitle) = React.useState(() => "");
     let (tags, setTags) = React.useState(() => "");
     let (previewImage, setPreviewImage) = React.useState(() => "");
@@ -108,7 +108,7 @@ module AddNewBookForm = {
         className=Styles.button
         onClick={_ =>
           addBook({
-            id: 1,
+            id: (books |> Array.length) + 1,
             title,
             previewImage,
             tags:
@@ -180,6 +180,7 @@ let make = () => {
         )
      |> ReasonReact.array}
     <AddNewBookForm
+      books
       addBook={book => setBooks(_ => Array.append([|book|], books))}
     />
     <br />
