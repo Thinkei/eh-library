@@ -109,6 +109,7 @@ module AddNewBookForm = {
         onClick={_ =>
           addBook({
             id: (books |> Array.length) + 1,
+            id: Some((books |> Array.length) + 1),
             title,
             previewImage,
             tags:
@@ -124,26 +125,33 @@ module AddNewBookForm = {
 };
 
 let book1 = {
-  id: 0,
+  id: Some(0),
   title: "Exploring ReasonML and functional programming",
   tags: ["frontend", "ocaml"],
   previewImage: "http://bit.ly/2XMWrE7",
 };
 let book2 = {
-  id: 1,
+  id: Some(1),
   title: "Learn Web Development with Rails",
   tags: ["backend", "ruby", "rails"],
   previewImage: "http://bit.ly/2y1hmEl",
 };
 let book3 = {
-  id: 2,
+  id: Some(2),
   title: "The Rust Programming Language",
   tags: ["backend", "ownership"],
   previewImage: "http://bit.ly/2LozvnU",
 };
 let initialBooks = [|book1, book2, book3|];
 
-let initEditingBook = {id: (-1), title: "", tags: [], previewImage: ""};
+let optionToString = (id: option(int)) => {
+  switch (id) {
+  | None => ""
+  | Some(id) => string_of_int(id)
+  };
+};
+
+let initEditingBook = {id: None, title: "", tags: [], previewImage: ""};
 
 type action =
   | SetBook(book)
@@ -173,7 +181,7 @@ let make = () => {
     {books
      |> Array.map(book =>
           <Book
-            key={string_of_int(book.id)}
+            key={book.id |> optionToString}
             book
             setEditingBook={bookItem => dispatch(SetBook(bookItem))}
           />

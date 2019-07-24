@@ -1,5 +1,5 @@
 type book = {
-  id: int,
+  id: option(int),
   title: string,
   tags: list(string),
   previewImage: string,
