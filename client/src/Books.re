@@ -22,39 +22,23 @@ module Styles = {
 
 module UpdateBookForm = {
   [@react.component]
-  let make = (~editingBook, ~updateBook) => {
-    let (title, setTitle) = React.useState(() => editingBook.title);
-    let (tags, setTags) =
-      React.useState(() =>
-        editingBook.tags |> Array.of_list |> Js.Array.joinWith(", ")
-      );
-    let (previewImage, setPreviewImage) =
-      React.useState(() => editingBook.previewImage);
-
-    React.useEffect1(
-      () => {
-        setTitle(_ => editingBook.title);
-        setPreviewImage(_ => editingBook.previewImage);
-        setTags(_ =>
-          editingBook.tags |> Array.of_list |> Js.Array.joinWith(", ")
-        );
-        None;
-      },
-      [|editingBook|],
-    );
-
+  let make = (~editingBook, ~updateBook, ~setTitle, ~setPreviewImage, ~setTags) => {
     <div className=Styles.form>
       <div>
         <input
-          value=title
+          value={editingBook.title}
           type_="text"
           placeholder="Title"
-          onChange={e => setTitle(e->ReactEvent.Form.target##value)}
+          onChange={e => {
+            Js.log(e);
+            Js.log(setTitle);
+            setTitle(e->ReactEvent.Form.target##value);
+          }}
         />
       </div>
       <div className=Styles.item>
         <input
-          value=previewImage
+          value={editingBook.previewImage}
           type_="text"
           placeholder="Image URL"
           onChange={e => setPreviewImage(e->ReactEvent.Form.target##value)}
@@ -62,10 +46,10 @@ module UpdateBookForm = {
       </div>
       <div className=Styles.item>
         <input
-          value=tags
+          value={editingBook.tags |> Array.of_list |> Js.Array.joinWith(", ")}
           type_="text"
           placeholder="Tags"
-          onChange={e => setTags(e->ReactEvent.Form.target##value)}
+          onChange={e => setTags(e->ReactEvent.Form.target##value |> Js.String.split(",") |> Array.to_list |> List.map(Js.String.trim))}
         />
       </div>
       <button
@@ -73,12 +57,9 @@ module UpdateBookForm = {
         onClick={_ =>
           updateBook({
             id: editingBook.id,
-            title,
-            previewImage,
-            tags:
-              Js.String.split(",", tags)
-              |> Array.to_list
-              |> List.map(Js.String.trim),
+            title: editingBook.title,
+            previewImage: editingBook.previewImage,
+            tags: editingBook.tags,
           })
         }>
         {ReasonReact.string("Update book")}
@@ -158,17 +139,41 @@ let book3 = {
 };
 let initialBooks = [|book1, book2, book3|];
 
-let editingBook = {id: (-1), title: "", tags: [], previewImage: ""};
+let initEditingBook = {id: (-1), title: "", tags: [], previewImage: ""};
+
+type action =
+  | SetBook(book)
+  | SetTitle(string)
+  | SetPreviewImage(string)
+  | SetTags(list(string));
+
+type state = {editingBook: book};
 
 [@react.component]
 let make = () => {
   let (books, setBooks) = React.useState(() => initialBooks);
-  let (editingBook, setEditingBook) = React.useState(() => editingBook);
+  /* let (editingBook, setEditingBook) = React.useState(() => initEditingBook); */
+
+  let (editingBook, dispatch) =
+    React.useReducer(
+      (editingBook, action) =>
+        switch (action) {
+        | SetBook(book) => {book}
+        | SetTitle(title) => {...editingBook, title}
+        | SetPreviewImage(previewImage) => {...editingBook, previewImage}
+        | SetTags(tags) => {...editingBook, tags}
+        },
+        initEditingBook,
+    );
 
   <div className=Styles.container>
     {books
      |> Array.map(book =>
-          <Book key={string_of_int(book.id)} book setEditingBook />
+          <Book
+            key={string_of_int(book.id)}
+            book
+            setEditingBook={_ => dispatch(SetBook(book))}
+          />
         )
      |> ReasonReact.array}
     <AddNewBookForm
@@ -176,6 +181,9 @@ let make = () => {
     />
     <br />
     <UpdateBookForm
+      setTitle={title => dispatch(SetTitle(title))}
+      setPreviewImage={previewImage => dispatch(SetPreviewImage(previewImage))}
+      setTags={tags => dispatch(SetTags(tags))}
       editingBook
       updateBook={editingBook =>
         setBooks(books =>
