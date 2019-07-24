@@ -22,18 +22,15 @@ module Styles = {
 
 module UpdateBookForm = {
   [@react.component]
-  let make = (~editingBook, ~updateBook, ~setTitle, ~setPreviewImage, ~setTags) => {
+  let make =
+      (~editingBook, ~updateBook, ~setTitle, ~setPreviewImage, ~setTags) => {
     <div className=Styles.form>
       <div>
         <input
           value={editingBook.title}
           type_="text"
           placeholder="Title"
-          onChange={e => {
-            Js.log(e);
-            Js.log(setTitle);
-            setTitle(e->ReactEvent.Form.target##value);
-          }}
+          onChange={e => setTitle(e->ReactEvent.Form.target##value)}
         />
       </div>
       <div className=Styles.item>
@@ -49,7 +46,14 @@ module UpdateBookForm = {
           value={editingBook.tags |> Array.of_list |> Js.Array.joinWith(", ")}
           type_="text"
           placeholder="Tags"
-          onChange={e => setTags(e->ReactEvent.Form.target##value |> Js.String.split(",") |> Array.to_list |> List.map(Js.String.trim))}
+          onChange={e =>
+            setTags(
+              e->ReactEvent.Form.target##value
+              |> Js.String.split(",")
+              |> Array.to_list
+              |> List.map(Js.String.trim),
+            )
+          }
         />
       </div>
       <button
@@ -152,18 +156,17 @@ type state = {editingBook: book};
 [@react.component]
 let make = () => {
   let (books, setBooks) = React.useState(() => initialBooks);
-  /* let (editingBook, setEditingBook) = React.useState(() => initEditingBook); */
 
   let (editingBook, dispatch) =
     React.useReducer(
       (editingBook, action) =>
         switch (action) {
-        | SetBook(book) => {book}
+        | SetBook(book) => book
         | SetTitle(title) => {...editingBook, title}
         | SetPreviewImage(previewImage) => {...editingBook, previewImage}
         | SetTags(tags) => {...editingBook, tags}
         },
-        initEditingBook,
+      initEditingBook,
     );
 
   <div className=Styles.container>
@@ -172,21 +175,23 @@ let make = () => {
           <Book
             key={string_of_int(book.id)}
             book
-            setEditingBook={_ => dispatch(SetBook(book))}
+            setEditingBook={bookItem => dispatch(SetBook(bookItem))}
           />
         )
      |> ReasonReact.array}
     <AddNewBookForm
-      addBook={book => setBooks(books => Array.append([|book|], books))}
+      addBook={book => setBooks(_ => Array.append([|book|], books))}
     />
     <br />
     <UpdateBookForm
-      setTitle={title => dispatch(SetTitle(title))}
-      setPreviewImage={previewImage => dispatch(SetPreviewImage(previewImage))}
-      setTags={tags => dispatch(SetTags(tags))}
       editingBook
+      setTitle={title => dispatch(SetTitle(title))}
+      setPreviewImage={previewImage =>
+        dispatch(SetPreviewImage(previewImage))
+      }
+      setTags={tags => dispatch(SetTags(tags))}
       updateBook={editingBook =>
-        setBooks(books =>
+        setBooks(_ =>
           Array.map(
             book => book.id === editingBook.id ? editingBook : book,
             books,

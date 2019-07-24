@@ -69,7 +69,7 @@ let make = (~book, ~setEditingBook) => {
     <div>
       <button
         className=BookStyles.editButton
-        onClick={_ => setEditingBook(_ => book)}
+        onClick={_ => setEditingBook(book)}
       >
         {ReasonReact.string("Edit")}
       </button>
