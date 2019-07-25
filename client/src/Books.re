@@ -23,52 +23,56 @@ module Styles = {
 module UpdateBookForm = {
   [@react.component]
   let make =
-      (~editingBook, ~updateBook, ~setTitle, ~setPreviewImage, ~setTags) => {
-    <div className=Styles.form>
-      <div>
-        <input
-          value={editingBook.title}
-          type_="text"
-          placeholder="Title"
-          onChange={e => setTitle(e->ReactEvent.Form.target##value)}
-        />
+      (~editingBook, ~setTitle, ~setPreviewImage, ~setTags, ~updateBook) => {
+    switch (editingBook) {
+    | Some(book) =>
+      <div className=Styles.form>
+        <div>
+          <input
+            value={book.title}
+            type_="text"
+            placeholder="Title"
+            onChange={e => setTitle(e->ReactEvent.Form.target##value)}
+          />
+        </div>
+        <div className=Styles.item>
+          <input
+            value={book.previewImage}
+            type_="text"
+            placeholder="Image URL"
+            onChange={e => setPreviewImage(e->ReactEvent.Form.target##value)}
+          />
+        </div>
+        <div className=Styles.item>
+          <input
+            value={book.tags |> Array.of_list |> Js.Array.joinWith(", ")}
+            type_="text"
+            placeholder="Tags"
+            onChange={e =>
+              setTags(
+                e->ReactEvent.Form.target##value
+                |> Js.String.split(",")
+                |> Array.to_list
+                |> List.map(Js.String.trim),
+              )
+            }
+          />
+        </div>
+        <button
+          className=Styles.button
+          onClick={_ =>
+            updateBook({
+              id: book.id,
+              title: book.title,
+              previewImage: book.previewImage,
+              tags: book.tags,
+            })
+          }>
+          {ReasonReact.string("Update book")}
+        </button>
       </div>
-      <div className=Styles.item>
-        <input
-          value={editingBook.previewImage}
-          type_="text"
-          placeholder="Image URL"
-          onChange={e => setPreviewImage(e->ReactEvent.Form.target##value)}
-        />
-      </div>
-      <div className=Styles.item>
-        <input
-          value={editingBook.tags |> Array.of_list |> Js.Array.joinWith(", ")}
-          type_="text"
-          placeholder="Tags"
-          onChange={e =>
-            setTags(
-              e->ReactEvent.Form.target##value
-              |> Js.String.split(",")
-              |> Array.to_list
-              |> List.map(Js.String.trim),
-            )
-          }
-        />
-      </div>
-      <button
-        className=Styles.button
-        onClick={_ =>
-          updateBook({
-            id: editingBook.id,
-            title: editingBook.title,
-            previewImage: editingBook.previewImage,
-            tags: editingBook.tags,
-          })
-        }>
-        {ReasonReact.string("Update book")}
-      </button>
-    </div>;
+    | None => <div />
+    };
   };
 };
 
@@ -108,7 +112,7 @@ module AddNewBookForm = {
         className=Styles.button
         onClick={_ =>
           addBook({
-            id: (books |> Array.length) + 1,
+            id: Array.length(books) + 1,
             title,
             previewImage,
             tags:
@@ -141,17 +145,24 @@ let book3 = {
   tags: ["backend", "ownership"],
   previewImage: "http://bit.ly/2LozvnU",
 };
-let initialBooks = [|book1, book2, book3|];
+let initialBooks = [|Some(book1), Some(book2), Some(book3)|];
 
-let initEditingBook = {id: (-1), title: "", tags: [], previewImage: ""};
+let initEditingBook = None;
 
 type action =
   | SetBook(book)
   | SetTitle(string)
   | SetPreviewImage(string)
-  | SetTags(list(string));
+  | SetTags(list(string))
+  | None;
 
-type state = {editingBook: book};
+type state = {editingBook: option(book)};
+
+let convertOption = book =>
+  switch (book) {
+  | Some(book) => string_of_int(book.id)
+  | None => ""
+  };
 
 [@react.component]
 let make = () => {
@@ -161,10 +172,23 @@ let make = () => {
     React.useReducer(
       (editingBook, action) =>
         switch (action) {
-        | SetBook(book) => book
-        | SetTitle(title) => {...editingBook, title}
-        | SetPreviewImage(previewImage) => {...editingBook, previewImage}
-        | SetTags(tags) => {...editingBook, tags}
+        | SetBook(book) => Some(book)
+        | SetTitle(title) =>
+          switch (editingBook) {
+          | Some(book) => Some({...book, title})
+          | None => initEditingBook
+          }
+        | SetPreviewImage(previewImage) =>
+          switch (editingBook) {
+          | Some(book) => Some({...book, previewImage})
+          | None => initEditingBook
+          }
+        | SetTags(tags) =>
+          switch (editingBook) {
+          | Some(book) => Some({...book, tags})
+          | None => editingBook
+          }
+        | None => editingBook
         },
       initEditingBook,
     );
@@ -173,15 +197,17 @@ let make = () => {
     {books
      |> Array.map(book =>
           <Book
-            key={string_of_int(book.id)}
-            book
+            key={convertOption(book)}
+            bookItem=book
             setEditingBook={bookItem => dispatch(SetBook(bookItem))}
           />
         )
      |> ReasonReact.array}
     <AddNewBookForm
       books
-      addBook={book => setBooks(_ => Array.append([|book|], books))}
+      addBook={addedBook =>
+        setBooks(_ => Array.append([|Some(addedBook)|], books))
+      }
     />
     <br />
     <UpdateBookForm
@@ -191,14 +217,7 @@ let make = () => {
         dispatch(SetPreviewImage(previewImage))
       }
       setTags={tags => dispatch(SetTags(tags))}
-      updateBook={editingBook =>
-        setBooks(_ =>
-          Array.map(
-            book => book.id === editingBook.id ? editingBook : book,
-            books,
-          )
-        )
-      }
+      updateBook={editingBook => setBooks(_ => books)}
     />
   </div>;
 };

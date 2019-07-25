@@ -35,14 +35,15 @@ module BookStyles = {
 
   let previewImage = style([maxWidth(px(40))]);
 
-  let editButton = style([
-    10 |> px |> marginLeft,
-    `pointer |> cursor,
-    "fff" |> hex |> color,
-    "007bff" |> hex |> backgroundColor,
-    "007bff" |> hex |> borderColor,
-    0.75 |> rem |> borderRadius
-  ]);
+  let editButton =
+    style([
+      10 |> px |> marginLeft,
+      `pointer |> cursor,
+      "fff" |> hex |> color,
+      "007bff" |> hex |> backgroundColor,
+      "007bff" |> hex |> borderColor,
+      0.75 |> rem |> borderRadius,
+    ]);
 };
 
 module Tag = {
@@ -54,25 +55,39 @@ module Tag = {
 module TagList = {
   [@react.component]
   let make = (~tags) => {
-    tags |> List.map(tag => <Tag tag key=tag/>) |> Array.of_list |> ReasonReact.array;
+    tags
+    |> List.map(tag => <Tag tag key=tag />)
+    |> Array.of_list
+    |> ReasonReact.array;
   };
 };
 
 [@react.component]
-let make = (~book, ~setEditingBook) => {
-  <div className=BookStyles.book>
-    <img className=BookStyles.previewImage src=book.previewImage alt=book.title />
-    <div className=BookStyles.bookInformationContainer>
-      <div className=BookStyles.title> {ReasonReact.string(book.title)} </div>
-      <div className=BookStyles.tagContainer> <TagList tags=book.tags /> </div>
+let make = (~bookItem, ~setEditingBook) => {
+  switch (bookItem) {
+  | Some(book) =>
+    <div className=BookStyles.book>
+      <img
+        className=BookStyles.previewImage
+        src={book.previewImage}
+        alt={book.title}
+      />
+      <div className=BookStyles.bookInformationContainer>
+        <div className=BookStyles.title>
+          {ReasonReact.string(book.title)}
+        </div>
+        <div className=BookStyles.tagContainer>
+          <TagList tags={book.tags} />
+        </div>
+      </div>
+      <div>
+        <button
+          className=BookStyles.editButton
+          onClick={_ => setEditingBook(book)}>
+          {ReasonReact.string("Edit")}
+        </button>
+      </div>
     </div>
-    <div>
-      <button
-        className=BookStyles.editButton
-        onClick={_ => setEditingBook(book)}
-      >
-        {ReasonReact.string("Edit")}
-      </button>
-    </div>
-  </div>;
+  | None => <div />
+  };
 };
