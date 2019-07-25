@@ -1,4 +1,5 @@
 include Book;
+open Shipper;
 
 module Styles = {
   open Css;
@@ -18,6 +19,7 @@ module Styles = {
       0.75 |> rem |> borderRadius,
     ]
     |> style;
+<<<<<<< HEAD
 };
 
 module UpdateBookForm = {
@@ -74,6 +76,9 @@ module UpdateBookForm = {
     | None => <div />
     };
   };
+=======
+  let bookWrapper = [flexBox |> display] |> style;
+>>>>>>> Add modal to edit shipper in book screen
 };
 
 module AddNewBookForm = {
@@ -156,10 +161,33 @@ type action =
   | SetTags(list(string));
 
 type state = {editingBook: option(book)};
+let initialBooks = [book1, book2, book3];
+let initialShippers = [
+  {id: 0, name: "Shipper 1", info: "test 1"},
+  {id: 1, name: "Shipper 2", info: "test 2"},
+  {id: 2, name: "Shipper 3", info: "test 3"},
+];
 
 [@react.component]
 let make = () => {
   let (books, setBooks) = React.useState(() => initialBooks);
+  let (shippers, setShippers) = React.useState(() => initialShippers);
+  let (editingShipperId, setEditingShipper) = React.useState(() => None);
+  let (openEditModal, toggleEditModal) = React.useState(() => false);
+
+  let updateShipper = ({id, name, info}) => {
+    setShippers(_ =>
+      List.map(
+        shipper =>
+          if (shipper.id === id) {
+            {id, name, info};
+          } else {
+            shipper;
+          },
+        shippers,
+      )
+    );
+  };
 
   let (editingBook, dispatch) =
     React.useReducer(
@@ -192,6 +220,23 @@ let make = () => {
             bookItem=book
             setEditingBook={bookItem => dispatch(SetBook(bookItem))}
           />
+     |> List.mapi((index, book) =>
+          <div className=Styles.bookWrapper>
+            <Book
+              key={book.title}
+              title={book.title}
+              tags={book.tags}
+              previewImage={book.previewImage}
+            />
+            <div />
+            <button
+              onClick={_ => {
+                setEditingShipper(_ => Some(index));
+                toggleEditModal(_ => true);
+              }}>
+              {ReasonReact.string("Edit Shipper")}
+            </button>
+          </div>
         )
      |> ReasonReact.array}
     <AddNewBookForm
@@ -217,5 +262,17 @@ let make = () => {
         )
       }
     />
+    <AddNewBookForm addBook={book => setBooks(books => [book, ...books])} />
+    {switch (editingShipperId) {
+     | None => ReasonReact.null
+     | Some(editingId) =>
+       <EditShipperModal
+         openModal=openEditModal
+         toggleEditModal={state => toggleEditModal(_ => state)}
+         resetEditingShipper={_ => setEditingShipper(_ => None)}
+         editingShipper={List.nth(shippers, editingId)}
+         updateShipper
+       />
+     }}
   </div>;
 };
