@@ -145,7 +145,7 @@ let book3 = {
   tags: ["backend", "ownership"],
   previewImage: "http://bit.ly/2LozvnU",
 };
-let initialBooks = [|Some(book1), Some(book2), Some(book3)|];
+let initialBooks = [|book1, book2, book3|];
 
 let initEditingBook = None;
 
@@ -162,6 +162,12 @@ let convertOption = book =>
   switch (book) {
   | Some(book) => string_of_int(book.id)
   | None => ""
+  };
+
+let mapOption = (currentBook, editingBook) =>
+  switch (editingBook) {
+  | Some(book) => currentBook.id === book.id ? book : currentBook
+  | None => currentBook
   };
 
 [@react.component]
@@ -197,7 +203,7 @@ let make = () => {
     {books
      |> Array.map(book =>
           <Book
-            key={convertOption(book)}
+            key={string_of_int(book.id)}
             bookItem=book
             setEditingBook={bookItem => dispatch(SetBook(bookItem))}
           />
@@ -206,7 +212,7 @@ let make = () => {
     <AddNewBookForm
       books
       addBook={addedBook =>
-        setBooks(_ => Array.append([|Some(addedBook)|], books))
+        setBooks(_ => Array.append([|addedBook|], books))
       }
     />
     <br />
@@ -217,7 +223,7 @@ let make = () => {
         dispatch(SetPreviewImage(previewImage))
       }
       setTags={tags => dispatch(SetTags(tags))}
-      updateBook={editingBook => setBooks(_ => books)}
+      updateBook={editingBook => setBooks(_ => Array.map(book => book.id == editingBook.id ? editingBook : book, books))}
     />
   </div>;
 };

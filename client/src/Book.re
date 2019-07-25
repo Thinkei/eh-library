@@ -64,30 +64,23 @@ module TagList = {
 
 [@react.component]
 let make = (~bookItem, ~setEditingBook) => {
-  switch (bookItem) {
-  | Some(book) =>
-    <div className=BookStyles.book>
-      <img
-        className=BookStyles.previewImage
-        src={book.previewImage}
-        alt={book.title}
-      />
-      <div className=BookStyles.bookInformationContainer>
-        <div className=BookStyles.title>
-          {ReasonReact.string(book.title)}
-        </div>
-        <div className=BookStyles.tagContainer>
-          <TagList tags={book.tags} />
-        </div>
-      </div>
-      <div>
-        <button
-          className=BookStyles.editButton
-          onClick={_ => setEditingBook(book)}>
-          {ReasonReact.string("Edit")}
-        </button>
+  <div className=BookStyles.book>
+    <img
+      className=BookStyles.previewImage
+      src={bookItem.previewImage}
+      alt={bookItem.title}
+    />
+    <div className=BookStyles.bookInformationContainer>
+      <div className=BookStyles.title> {ReasonReact.string(bookItem.title)} </div>
+      <div className=BookStyles.tagContainer>
+        <TagList tags={bookItem.tags} />
       </div>
     </div>
-  | None => <div />
-  };
+    <div>
+      <button
+        className=BookStyles.editButton onClick={_ => setEditingBook(bookItem)}>
+        {ReasonReact.string("Edit")}
+      </button>
+    </div>
+  </div>;
 };
