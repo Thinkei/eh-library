@@ -24,19 +24,7 @@ pub fn register(auth_data: AuthData, conn: &PgConnection) -> Result<User, Servic
         return Err(ServiceError::EmailExisted);
     }
 
-    let mut hasher: Hasher = Hasher::default()
-        .with_password(auth_data.password.as_str())
-        .with_secret_key(SECRET_KEY.as_str())
-        .to_owned();
-
-    let encrypted_password = hasher
-        .hash()
-        .map_err(|err| {
-            dbg!(err);
-            ServiceError::Unauthorized
-        })
-        .unwrap();
-    let salt: Vec<u8> = hasher.salt().as_bytes().to_vec();
+    let (encrypted_password, salt) = encrypt_password(auth_data.password.as_str()).unwrap();
 
     dbg!(encrypted_password.clone());
     dbg!(salt.clone());
@@ -60,16 +48,21 @@ pub fn register(auth_data: AuthData, conn: &PgConnection) -> Result<User, Servic
         })
 }
 
-pub fn encrypt_password(password: &str, salt: Salt) -> Result<String, ServiceError> {
-    Hasher::default()
+pub fn encrypt_password(password: &str) -> Result<(String, Vec<u8>), ServiceError> {
+    let mut default_hasher: Hasher = Hasher::default();
+
+    let hasher = default_hasher
         .with_password(password)
-        .with_secret_key(SECRET_KEY.as_str())
-        .with_salt(salt)
-        .hash()
-        .map_err(|err| {
-            dbg!(err);
-            ServiceError::Unauthorized
-        })
+        .with_secret_key(SECRET_KEY.as_str());
+
+    let hash_result = hasher.hash();
+
+    let salt = hasher.salt().as_bytes().to_vec();
+
+    hash_result.map(|s| (s, salt)).map_err(|err| {
+        dbg!(err);
+        ServiceError::Unauthorized
+    })
 }
 
 // pub fn verify(hash: &str, password: &str) -> Result<bool, ServiceError> {}
