@@ -15,7 +15,10 @@
     "bs-platform": "^5.0.6",
     "bsb-js": "^1.1.7",
     "parcel-bundler": "^1.12.3",
+    "indexof": "0.0.1",
     "reason-react": "^0.7.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "bs-eh-design": "0.0.1"
+  }
 }

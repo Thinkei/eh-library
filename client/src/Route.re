@@ -44,12 +44,12 @@ module Config = {
 
 module Link = {
   [@react.component]
-  let make = (~route, ~children) => {
+  let make = (~route, ~style=?, ~children) => {
     let href = Config.toUrl(route);
     let onClick = e => {
       ReactEvent.Mouse.preventDefault(e);
       ReasonReact.Router.push(href);
     };
-    <a href onClick> children </a>;
+    <a href onClick ?style> children </a>;
   };
 };
