@@ -10,7 +10,7 @@ table! {
         id -> Int4,
         email -> Varchar,
         encrypted_password -> Varchar,
-        salt -> Varchar,
+        salt -> Bytea,
         is_admin -> Bool,
         created_at -> Timestamp,
     }
