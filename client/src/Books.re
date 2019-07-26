@@ -158,12 +158,6 @@ type action =
 
 type state = {editingBook: option(book)};
 
-let convertOption = book =>
-  switch (book) {
-  | Some(book) => string_of_int(book.id)
-  | None => ""
-  };
-
 [@react.component]
 let make = () => {
   let (books, setBooks) = React.useState(() => initialBooks);
