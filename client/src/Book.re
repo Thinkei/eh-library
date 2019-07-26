@@ -1,4 +1,5 @@
 type book = {
+  id: int,
   title: string,
   tags: list(string),
   previewImage: string,
@@ -33,6 +34,16 @@ module BookStyles = {
     ]);
 
   let previewImage = style([maxWidth(px(40))]);
+
+  let editButton =
+    style([
+      10 |> px |> marginLeft,
+      `pointer |> cursor,
+      "fff" |> hex |> color,
+      "007bff" |> hex |> backgroundColor,
+      "007bff" |> hex |> borderColor,
+      0.75 |> rem |> borderRadius,
+    ]);
 };
 
 module Tag = {
@@ -44,16 +55,32 @@ module Tag = {
 module TagList = {
   [@react.component]
   let make = (~tags) => {
-    tags |> List.map(tag => <Tag tag />) |> Array.of_list |> ReasonReact.array;
+    tags
+    |> List.map(tag => <Tag tag key=tag />)
+    |> Array.of_list
+    |> ReasonReact.array;
   };
 };
+
 [@react.component]
-let make = (~title, ~tags, ~previewImage) => {
+let make = (~bookItem, ~setEditingBook) => {
   <div className=BookStyles.book>
-    <img className=BookStyles.previewImage src=previewImage alt=title />
+    <img
+      className=BookStyles.previewImage
+      src={bookItem.previewImage}
+      alt={bookItem.title}
+    />
     <div className=BookStyles.bookInformationContainer>
-      <div className=BookStyles.title> {ReasonReact.string(title)} </div>
-      <div className=BookStyles.tagContainer> <TagList tags /> </div>
+      <div className=BookStyles.title> {ReasonReact.string(bookItem.title)} </div>
+      <div className=BookStyles.tagContainer>
+        <TagList tags={bookItem.tags} />
+      </div>
+    </div>
+    <div>
+      <button
+        className=BookStyles.editButton onClick={_ => setEditingBook(bookItem)}>
+        {ReasonReact.string("Edit")}
+      </button>
     </div>
   </div>;
 };
