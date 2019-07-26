@@ -153,8 +153,7 @@ type action =
   | SetBook(book)
   | SetTitle(string)
   | SetPreviewImage(string)
-  | SetTags(list(string))
-  | None;
+  | SetTags(list(string));
 
 type state = {editingBook: option(book)};
 
@@ -168,15 +167,18 @@ let make = () => {
         switch (editingBook) {
         | Some(book) =>
           switch (action) {
+          | SetBook(book) => Some(book)
           | SetTitle(title) => Some({...book, title})
           | SetPreviewImage(previewImage) => Some({...book, previewImage})
           | SetTags(tags) => Some({...book, tags})
-          | _ => Some(book)
           }
         | None =>
           switch (action) {
           | SetBook(book) => Some(book)
-          | _ => editingBook
+          | SetTitle(_)
+          | SetPreviewImage(_)
+          | SetTags(_)
+            => None
           }
         },
       initEditingBook,
