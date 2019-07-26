@@ -20,7 +20,7 @@ pub fn register(auth_data: AuthData, conn: &PgConnection) -> Result<User, Servic
         .filter(email.eq(auth_data.email.clone()))
         .first::<User>(conn);
 
-    if let Ok(_) = user {
+    if user.is_ok() {
         return Err(ServiceError::EmailExisted);
     }
 
@@ -48,6 +48,23 @@ pub fn register(auth_data: AuthData, conn: &PgConnection) -> Result<User, Servic
         })
 }
 
+pub fn login(auth_data: AuthData, conn: &PgConnection) -> Result<User, ServiceError> {
+    use crate::schema::users::dsl::{email, users};
+
+    let user: QueryResult<User> = users.filter(email.eq(auth_data.email)).first::<User>(conn);
+
+    if user.is_err() {
+        return Err(ServiceError::Unauthorized);
+    }
+
+    let user = user.unwrap();
+
+    verify(auth_data.password, user.encrypted_password.clone()).and_then(|v| match v {
+        true => Ok(user),
+        false => Err(ServiceError::Unauthorized),
+    })
+}
+
 pub fn encrypt_password(password: &str) -> Result<(String, Vec<u8>), ServiceError> {
     let mut default_hasher: Hasher = Hasher::default();
 
@@ -65,7 +82,14 @@ pub fn encrypt_password(password: &str) -> Result<(String, Vec<u8>), ServiceErro
     })
 }
 
-// pub fn verify(hash: &str, password: &str) -> Result<bool, ServiceError> {}
+pub fn verify(password: String, encrypted_password: String) -> Result<bool, ServiceError> {
+    Verifier::default()
+        .with_hash(encrypted_password)
+        .with_password(password)
+        .with_secret_key(SECRET_KEY.as_str())
+        .verify()
+        .map_err(|_| ServiceError::Unauthorized)
+}
 
 #[cfg(test)]
 mod tests {
@@ -116,5 +140,22 @@ mod tests {
 
         let actual = register(auth_data, &conn);
         assert_matches!(actual, Err(ServiceError::EmailExisted));
+    }
+
+    #[test]
+    fn login_success() {
+        let _guard = this_test_modifies_env();
+
+        let conn = connection();
+
+        let auth_data = AuthData {
+            email: "x@example.com".to_owned(),
+            password: "123".to_owned(),
+        };
+
+        let _ = register(auth_data.clone(), &conn);
+
+        let user = login(auth_data, &conn).unwrap();
+        assert_eq!(user.email, "x@example.com");
     }
 }
