@@ -164,12 +164,6 @@ let convertOption = book =>
   | None => ""
   };
 
-let mapOption = (currentBook, editingBook) =>
-  switch (editingBook) {
-  | Some(book) => currentBook.id === book.id ? book : currentBook
-  | None => currentBook
-  };
-
 [@react.component]
 let make = () => {
   let (books, setBooks) = React.useState(() => initialBooks);
@@ -177,24 +171,19 @@ let make = () => {
   let (editingBook, dispatch) =
     React.useReducer(
       (editingBook, action) =>
-        switch (action) {
-        | SetBook(book) => Some(book)
-        | SetTitle(title) =>
-          switch (editingBook) {
-          | Some(book) => Some({...book, title})
-          | None => initEditingBook
+        switch (editingBook) {
+        | Some(book) =>
+          switch (action) {
+          | SetTitle(title) => Some({...book, title})
+          | SetPreviewImage(previewImage) => Some({...book, previewImage})
+          | SetTags(tags) => Some({...book, tags})
+          | _ => Some(book)
           }
-        | SetPreviewImage(previewImage) =>
-          switch (editingBook) {
-          | Some(book) => Some({...book, previewImage})
-          | None => initEditingBook
+        | None =>
+          switch (action) {
+          | SetBook(book) => Some(book)
+          | _ => editingBook
           }
-        | SetTags(tags) =>
-          switch (editingBook) {
-          | Some(book) => Some({...book, tags})
-          | None => editingBook
-          }
-        | None => editingBook
         },
       initEditingBook,
     );
@@ -223,7 +212,14 @@ let make = () => {
         dispatch(SetPreviewImage(previewImage))
       }
       setTags={tags => dispatch(SetTags(tags))}
-      updateBook={editingBook => setBooks(_ => Array.map(book => book.id == editingBook.id ? editingBook : book, books))}
+      updateBook={editingBook =>
+        setBooks(_ =>
+          Array.map(
+            book => book.id == editingBook.id ? editingBook : book,
+            books,
+          )
+        )
+      }
     />
   </div>;
 };
