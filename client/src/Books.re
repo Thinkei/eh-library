@@ -1,10 +1,18 @@
 include Book;
 open Shipper;
+open Ehd
 
 module Styles = {
   open Css;
 
   let container = style([padding(px(100)), color(black)]);
+
+  let bookList = [
+    display(grid),
+    gridColumnGap(px(24)),
+    gridTemplateColumns([`repeat(`num(4), `fr(1.0))]),
+  ] |> style
+
   let form = [20 |> px |> paddingLeft, flexBox |> display] |> style;
 
   let item = [10 |> px |> marginLeft] |> style;
@@ -19,57 +27,13 @@ module Styles = {
       0.75 |> rem |> borderRadius,
     ]
     |> style;
-  let bookWrapper = [flexBox |> display] |> style;
-};
 
-module AddNewBookForm = {
-  [@react.component]
-  let make = (~addBook) => {
-    let (title, setTitle) = React.useState(() => "");
-    let (tags, setTags) = React.useState(() => "");
-    let (previewImage, setPreviewImage) = React.useState(() => "");
-
-    <div className=Styles.form>
-      <div>
-        <input
-          value=title
-          type_="text"
-          placeholder="Title"
-          onChange={e => setTitle(e->ReactEvent.Form.target##value)}
-        />
-      </div>
-      <div className=Styles.item>
-        <input
-          value=previewImage
-          type_="text"
-          placeholder="Image URL"
-          onChange={e => setPreviewImage(e->ReactEvent.Form.target##value)}
-        />
-      </div>
-      <div className=Styles.item>
-        <input
-          value=tags
-          type_="text"
-          placeholder="Tags"
-          onChange={e => setTags(e->ReactEvent.Form.target##value)}
-        />
-      </div>
-      <button
-        className=Styles.button
-        onClick={_ =>
-          addBook({
-            title,
-            previewImage,
-            tags:
-              Js.String.split(",", tags)
-              |> Array.to_list
-              |> List.map(Js.String.trim),
-          })
-        }>
-        {ReasonReact.string("Add new book")}
-      </button>
-    </div>;
-  };
+  let bookWrapper = [
+    display(flexBox),
+    borderBottom(px(1), solid, dimgrey),
+    justifyContent(spaceBetween),
+    alignItems(center),
+  ] |> style;
 };
 
 let book1 = {
@@ -116,28 +80,30 @@ let make = () => {
   };
 
   <div className=Styles.container>
-    {books
-     |> List.mapi((index, book) =>
-          <div className=Styles.bookWrapper>
-            <Book
-              key={book.title}
-              title={book.title}
-              tags={book.tags}
-              previewImage={book.previewImage}
-            />
-            <div />
-            <button
-              onClick={_ => {
-                setEditingShipper(_ => Some(index));
-                toggleEditModal(_ => true);
-              }}>
-              {ReasonReact.string("Edit Shipper")}
-            </button>
-          </div>
-        )
-     |> Array.of_list
-     |> ReasonReact.array}
-    <AddNewBookForm addBook={book => setBooks(books => [book, ...books])} />
+    <div className=Styles.bookList style={ReactDOMRe.Style.make(~gridAutoColumns="minmax(min-content, max-content)", ())}>
+      {books
+        |> List.mapi((index, book) =>
+          <Book
+            key={book.title}
+            title={book.title}
+            tags={book.tags}
+            previewImage={book.previewImage}
+            editShipperButton={
+              <Button
+                onClick={_ => {
+                  setEditingShipper(_ => Some(index));
+                  toggleEditModal(_ => true);
+                }}
+                icon=`edit>
+                {ReasonReact.string("Edit Shipper")}
+              </Button>
+            }
+          />
+          )
+      |> Array.of_list
+      |> ReasonReact.array}
+      <BookForm addBook={book => setBooks(books => [book, ...books])} />
+    </div>
     {switch (editingShipperId) {
      | None => ReasonReact.null
      | Some(editingId) =>

@@ -25,13 +25,15 @@ let make =
       updateShipper({id: editingShipper.id, name, info});
       resetEditingShipper();
     }}>
-    <Input
-      defaultValue=name
-      onChange={e => setName(e->ReactEvent.Form.target##value)}
-    />
-    <Input
-      defaultValue=info
-      onChange={e => setInfo(e->ReactEvent.Form.target##value)}
-    />
+    <div style={ReactDOMRe.Style.make(~display="grid", ())}>
+      <Input
+        defaultValue=name
+        onChange={e => setName(e->ReactEvent.Form.target##value)}
+      />
+      <Input.TextArea
+        defaultValue=info
+        onChange={e => setInfo(e->ReactEvent.Form.target##value)}
+      />
+    </div>
   </Modal>;
 };

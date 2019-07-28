@@ -4,41 +4,41 @@ type book = {
   previewImage: string,
 };
 
+open Ehd;
+
 module BookStyles = {
   open Css;
 
   let bookInformationContainer = style([marginLeft(px(10))]);
 
-  let book =
-    style([
-      display(flexBox),
-      margin(px(20)),
-      paddingBottom(px(10)),
-      borderBottom(px(1), solid, dimgrey),
-    ]);
+  let tagContainer = style([margin2(~v=px(5), ~h=zero)]);
+
+  let previewImage = style([maxHeight(px(180))]);
 
   let title = style([fontWeight(bold)]);
 
-  let tagContainer = style([margin2(~v=px(5), ~h=zero)]);
+  let detail = [
+    textAlign(`left),
+    paddingLeft(px(10)),
+  ] |> style
 
-  let tag =
-    style([
-      marginRight(px(10)),
-      padding(px(2)),
-      color(dimgrey),
-      fontSize(px(10)),
-      border(px(1), solid, dimgrey),
-      borderRadius(px(4)),
-      display(inlineBlock),
-    ]);
+  let cardContent = [
+    display(flexBox),
+  ] |> style;
 
-  let previewImage = style([maxWidth(px(40))]);
+  let cardFooter = [
+    padding(px(24)),
+    textAlign(`right),
+    paddingBottom(zero),
+    borderTop(px(1), solid, hex("f2f2f2")),
+    margin3(~top=px(24), ~h=px(-24), ~bottom=zero),
+  ] |> style
 };
 
 module Tag = {
   [@react.component]
   let make = (~tag) => {
-    <span className=BookStyles.tag> {ReasonReact.string(tag)} </span>;
+    <Tag color="volcano"> {ReasonReact.string(tag)} </Tag>;
   };
 };
 module TagList = {
@@ -48,12 +48,17 @@ module TagList = {
   };
 };
 [@react.component]
-let make = (~title, ~tags, ~previewImage) => {
-  <div className=BookStyles.book>
-    <img className=BookStyles.previewImage src=previewImage alt=title />
-    <div className=BookStyles.bookInformationContainer>
-      <div className=BookStyles.title> {ReasonReact.string(title)} </div>
-      <div className=BookStyles.tagContainer> <TagList tags /> </div>
+let make = (~title, ~tags, ~previewImage, ~editShipperButton) => {
+  <Card style={ReactDOMRe.Style.make(~paddingBottom="", ())}>
+    <div className=BookStyles.cardContent>
+      <img className=BookStyles.previewImage src=previewImage alt=title />
+      <div className=BookStyles.detail>
+        <h4 className=BookStyles.title>{ReasonReact.string(title)}</h4>
+        <TagList tags />
+      </div>
     </div>
-  </div>;
+    <div className=BookStyles.cardFooter>
+      {editShipperButton}
+    </div>
+  </Card>
 };
