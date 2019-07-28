@@ -1,10 +1,20 @@
 include Book;
 open Shipper;
+open Ehd;
 
 module Styles = {
   open Css;
 
   let container = style([padding(px(100)), color(black)]);
+
+  let bookList =
+    [
+      display(grid),
+      gridColumnGap(px(24)),
+      gridTemplateColumns([`repeat((`num(4), `fr(1.0)))]),
+    ]
+    |> style;
+
   let form = [20 |> px |> paddingLeft, flexBox |> display] |> style;
 
   let item = [10 |> px |> marginLeft] |> style;
@@ -19,7 +29,6 @@ module Styles = {
       0.75 |> rem |> borderRadius,
     ]
     |> style;
-<<<<<<< HEAD
 };
 
 module UpdateBookForm = {
@@ -76,9 +85,8 @@ module UpdateBookForm = {
     | None => <div />
     };
   };
-=======
+
   let bookWrapper = [flexBox |> display] |> style;
->>>>>>> Add modal to edit shipper in book screen
 };
 
 module AddNewBookForm = {
@@ -130,6 +138,15 @@ module AddNewBookForm = {
       </button>
     </div>;
   };
+
+  let bookWrapper =
+    [
+      display(flexBox),
+      borderBottom(px(1), solid, dimgrey),
+      justifyContent(spaceBetween),
+      alignItems(center),
+    ]
+    |> style;
 };
 
 let book1 = {
@@ -205,64 +222,59 @@ let make = () => {
           | SetBook(book) => Some(book)
           | SetTitle(_)
           | SetPreviewImage(_)
-          | SetTags(_)
-            => None
+          | SetTags(_) => None
           }
         },
       initEditingBook,
     );
 
   <div className=Styles.container>
-    {books
-     |> Array.map(book =>
-          <Book
-            key={string_of_int(book.id)}
-            bookItem=book
-            setEditingBook={bookItem => dispatch(SetBook(bookItem))}
-          />
-     |> List.mapi((index, book) =>
-          <div className=Styles.bookWrapper>
+    <div
+      className=Styles.bookList
+      style={ReactDOMRe.Style.make(
+        ~gridAutoColumns="minmax(min-content, max-content)",
+        (),
+      )}>
+      {books
+       |> List.mapi((index, book) =>
             <Book
               key={book.title}
               title={book.title}
               tags={book.tags}
               previewImage={book.previewImage}
+              editShipperButton={
+                <Button
+                  onClick={_ => {
+                    setEditingShipper(_ => Some(index));
+                    toggleEditModal(_ => true);
+                  }}
+                  icon=`edit>
+                  {ReasonReact.string("Edit Shipper")}
+                </Button>
+              }
             />
-            <div />
-            <button
-              onClick={_ => {
-                setEditingShipper(_ => Some(index));
-                toggleEditModal(_ => true);
-              }}>
-              {ReasonReact.string("Edit Shipper")}
-            </button>
-          </div>
-        )
-     |> ReasonReact.array}
-    <AddNewBookForm
-      books
-      addBook={addedBook =>
-        setBooks(_ => Array.append([|addedBook|], books))
-      }
-    />
-    <br />
-    <UpdateBookForm
-      editingBook
-      setTitle={title => dispatch(SetTitle(title))}
-      setPreviewImage={previewImage =>
-        dispatch(SetPreviewImage(previewImage))
-      }
-      setTags={tags => dispatch(SetTags(tags))}
-      updateBook={editingBook =>
-        setBooks(_ =>
-          Array.map(
-            book => book.id == editingBook.id ? editingBook : book,
-            books,
           )
-        )
-      }
-    />
-    <AddNewBookForm addBook={book => setBooks(books => [book, ...books])} />
+       |> Array.of_list
+       |> ReasonReact.array}
+      <BookForm addBook={book => setBooks(books => [book, ...books])} />
+      <UpdateBookForm
+        editingBook
+        setTitle={title => dispatch(SetTitle(title))}
+        setPreviewImage={previewImage =>
+          dispatch(SetPreviewImage(previewImage))
+        }
+        setTags={tags => dispatch(SetTags(tags))}
+        updateBook={editingBook =>
+          setBooks(_ =>
+            Array.map(
+              book => book.id == editingBook.id ? editingBook : book,
+              books,
+            )
+          )
+        }
+      />
+      <AddNewBookForm addBook={book => setBooks(books => [book, ...books])} />
+    </div>
     {switch (editingShipperId) {
      | None => ReasonReact.null
      | Some(editingId) =>
