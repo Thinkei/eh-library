@@ -15,7 +15,7 @@ module Styles = {
     ReactDOMRe.Style.make(
       ~fontSize="14px",
       ~textAlign="center",
-      ~border="0.5px solid #d8d8d8",
+      // ~border="0.5px solid #d8d8d8",
       ~minHeight="100vh",
       (),
     );
