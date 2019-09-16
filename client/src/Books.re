@@ -29,6 +29,15 @@ module Styles = {
       0.75 |> rem |> borderRadius,
     ]
     |> style;
+
+  let bookWrapper =
+    [
+      display(flexBox),
+      borderBottom(px(1), solid, dimgrey),
+      justifyContent(spaceBetween),
+      alignItems(center),
+    ]
+    |> style;
 };
 
 module UpdateBookForm = {
@@ -85,8 +94,6 @@ module UpdateBookForm = {
     | None => <div />
     };
   };
-
-  let bookWrapper = [flexBox |> display] |> style;
 };
 
 module AddNewBookForm = {
@@ -138,15 +145,6 @@ module AddNewBookForm = {
       </button>
     </div>;
   };
-
-  let bookWrapper =
-    [
-      display(flexBox),
-      borderBottom(px(1), solid, dimgrey),
-      justifyContent(spaceBetween),
-      alignItems(center),
-    ]
-    |> style;
 };
 
 let book1 = {
@@ -256,25 +254,25 @@ let make = () => {
           )
        |> Array.of_list
        |> ReasonReact.array}
-      <BookForm addBook={book => setBooks(books => [book, ...books])} />
-      <UpdateBookForm
-        editingBook
-        setTitle={title => dispatch(SetTitle(title))}
-        setPreviewImage={previewImage =>
-          dispatch(SetPreviewImage(previewImage))
-        }
-        setTags={tags => dispatch(SetTags(tags))}
-        updateBook={editingBook =>
-          setBooks(_ =>
-            Array.map(
-              book => book.id == editingBook.id ? editingBook : book,
-              books,
-            )
-          )
-        }
-      />
-      <AddNewBookForm addBook={book => setBooks(books => [book, ...books])} />
     </div>
+    <BookForm addBook={book => setBooks(books => [book, ...books])} />
+    <UpdateBookForm
+      editingBook
+      setTitle={title => dispatch(SetTitle(title))}
+      setPreviewImage={previewImage =>
+        dispatch(SetPreviewImage(previewImage))
+      }
+      setTags={tags => dispatch(SetTags(tags))}
+      updateBook={editingBook =>
+        setBooks(_ =>
+          Array.map(
+            book => book.id == editingBook.id ? editingBook : book,
+            books,
+          )
+        )
+      }
+    />
+    <AddNewBookForm addBook={book => setBooks(books => [book, ...books])} />
     {switch (editingShipperId) {
      | None => ReasonReact.null
      | Some(editingId) =>

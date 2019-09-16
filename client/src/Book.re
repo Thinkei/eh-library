@@ -18,14 +18,9 @@ module BookStyles = {
 
   let title = style([fontWeight(bold)]);
 
-  let detail = [
-    textAlign(`left),
-    paddingLeft(px(10)),
-  ] |> style
+  let detail = [textAlign(`left), paddingLeft(px(10))] |> style;
 
-  let cardContent = [
-    display(flexBox),
-  ] |> style;
+  let cardContent = [display(flexBox)] |> style;
 
   let tag =
     style([
@@ -38,7 +33,7 @@ module BookStyles = {
       display(inlineBlock),
     ]);
 
-  let previewImage = style([maxWidth(px(40))]);
+  let previewImage = style([maxWidth(px(120))]);
 
   let editButton =
     style([
@@ -49,13 +44,15 @@ module BookStyles = {
       "007bff" |> hex |> borderColor,
       0.75 |> rem |> borderRadius,
     ]);
-  let cardFooter = [
-    padding(px(24)),
-    textAlign(`right),
-    paddingBottom(zero),
-    borderTop(px(1), solid, hex("f2f2f2")),
-    margin3(~top=px(24), ~h=px(-24), ~bottom=zero),
-  ] |> style
+  let cardFooter =
+    [
+      padding(px(24)),
+      textAlign(`right),
+      paddingBottom(zero),
+      borderTop(px(1), solid, hex("f2f2f2")),
+      margin3(~top=px(24), ~h=px(-24), ~bottom=zero),
+    ]
+    |> style;
 };
 
 module Tag = {
@@ -75,35 +72,15 @@ module TagList = {
 };
 
 [@react.component]
-let make = (~bookItem, ~setEditingBook) => {
-  <div className=BookStyles.book>
-    <img
-      className=BookStyles.previewImage
-      src={bookItem.previewImage}
-      alt={bookItem.title}
-    />
-    <div className=BookStyles.bookInformationContainer>
-      <div className=BookStyles.title> {ReasonReact.string(bookItem.title)} </div>
-      <div className=BookStyles.tagContainer>
-        <TagList tags={bookItem.tags} />
-      </div>
-    </div>
-    <div>
-      <button
-        className=BookStyles.editButton onClick={_ => setEditingBook(bookItem)}>
-        {ReasonReact.string("Edit")}
-      </button>
 let make = (~title, ~tags, ~previewImage, ~editShipperButton) => {
   <Card style={ReactDOMRe.Style.make(~paddingBottom="", ())}>
     <div className=BookStyles.cardContent>
       <img className=BookStyles.previewImage src=previewImage alt=title />
       <div className=BookStyles.detail>
-        <h4 className=BookStyles.title>{ReasonReact.string(title)}</h4>
+        <h4 className=BookStyles.title> {ReasonReact.string(title)} </h4>
         <TagList tags />
       </div>
     </div>
-    <div className=BookStyles.cardFooter>
-      {editShipperButton}
-    </div>
-  </Card>
+    <div className=BookStyles.cardFooter> editShipperButton </div>
+  </Card>;
 };
