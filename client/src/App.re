@@ -59,7 +59,7 @@ let make = () =>
                switch (currentRoute) {
                | Home => <Books />
                | Books => <Books />
-               | MyProfile => <MyProfile />
+               | MyProfile => <MyProfile firstName="Hieu" lastName=None />
                | NewBook => <NewBook />
                | Shipper => <Shipper />
                | NotFound => <div> {ReasonReact.string("Not Found")} </div>
