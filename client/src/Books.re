@@ -255,24 +255,24 @@ let make = () => {
        |> Array.of_list
        |> ReasonReact.array}
     </div>
-    <BookForm addBook={book => setBooks(books => [book, ...books])} />
-    <UpdateBookForm
-      editingBook
-      setTitle={title => dispatch(SetTitle(title))}
-      setPreviewImage={previewImage =>
-        dispatch(SetPreviewImage(previewImage))
-      }
-      setTags={tags => dispatch(SetTags(tags))}
-      updateBook={editingBook =>
-        setBooks(_ =>
-          Array.map(
-            book => book.id == editingBook.id ? editingBook : book,
-            books,
-          )
-        )
-      }
-    />
-    <AddNewBookForm addBook={book => setBooks(books => [book, ...books])} />
+    // <BookForm addBook={book => setBooks(books => [book, ...books])} />
+    // <UpdateBookForm
+    //   editingBook
+    //   setTitle={title => dispatch(SetTitle(title))}
+    //   setPreviewImage={previewImage =>
+    //     dispatch(SetPreviewImage(previewImage))
+    //   }
+    //   setTags={tags => dispatch(SetTags(tags))}
+    //   updateBook={editingBook =>
+    //     setBooks(_ =>
+    //       Array.map(
+    //         book => book.id == editingBook.id ? editingBook : book,
+    //         books,
+    //       )
+    //     )
+    //   }
+    // />
+    // <AddNewBookForm addBook={book => setBooks(books => [book, ...books])} />
     {switch (editingShipperId) {
      | None => ReasonReact.null
      | Some(editingId) =>
