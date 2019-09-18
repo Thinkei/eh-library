@@ -14,11 +14,13 @@
     "bs-css": "^9.0.1",
     "bs-platform": "^5.0.6",
     "bsb-js": "^1.1.7",
-    "parcel-bundler": "^1.12.3",
+    "graphql_ppx": "^0.2.8",
     "indexof": "0.0.1",
+    "parcel-bundler": "^1.12.3",
     "reason-react": "^0.7.0"
   },
   "dependencies": {
-    "bs-eh-design": "0.0.2"
+    "bs-eh-design": "0.0.2",
+    "reason-apollo": "^0.17.0"
   }
 }

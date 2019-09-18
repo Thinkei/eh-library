@@ -19,7 +19,12 @@
     "reason-react",
     "@glennsl/bs-json",
     "bs-css",
-    "bs-eh-design"
+    "bs-eh-design",
+    "reason-react",
+    "reason-apollo"
+  ],
+  "ppx-flags": [
+    "graphql_ppx/ppx"
   ],
   "warnings": {
     "error": "+5+8"
