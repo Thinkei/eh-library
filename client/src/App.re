@@ -1,5 +1,6 @@
+[%bs.raw {|require("./styles/App.css")|}];
+
 open Ehd;
-open Route;
 
 module AppRouter = Router.Create(Route.Config);
 
@@ -23,52 +24,29 @@ module Styles = {
   let content =
     ReactDOMRe.Style.make(~minHeight="120px", ~lineHeight="120px", ());
   let footer = ReactDOMRe.Style.make(~textAlign="right", ());
+  let header =
+    ReactDOMRe.Style.make(~position="fixed", ~zIndex="1", ~width="100%", ());
 };
 
 [@react.component]
 let make = () =>
   <Layout style=Styles.layoutWrapper>
-    <Sider style=Styles.sider trigger=ReasonReact.null collapsible=true>
-      <Link
-        style={ReactDOMRe.Style.make(~color="white", ())}
-        route=Config.MyProfile>
-        {ReasonReact.string("My Profile")}
-      </Link>
-      <br />
-      <Link
-        style={ReactDOMRe.Style.make(~color="white", ())} route=Config.Books>
-        {ReasonReact.string("Books")}
-      </Link>
-      <br />
-      <Link
-        style={ReactDOMRe.Style.make(~color="white", ())}
-        route=Config.Shipper>
-        {ReasonReact.string("Shipper")}
-      </Link>
-    </Sider>
-    <Layout>
-      <Header>
-        <Typography.Title level=1>
-          {str("EH Book Management")}
-        </Typography.Title>
-      </Header>
-      <Content style=Styles.content>
-        <AppRouter>
-          {currentRoute =>
-             Route.Config.(
-               switch (currentRoute) {
-               | Home => <Books />
-               | Books => <Books />
-               | MyProfile => <MyProfile firstName="Hieu" lastName=None />
-               | NewBook => <NewBook />
-               | Shipper => <Shipper />
-               | NotFound => <div> {ReasonReact.string("Not Found")} </div>
-               }
-             )}
-        </AppRouter>
-      </Content>
-      <Footer style=Styles.footer>
-        {str({js| Implemented by 🐪 EH ReasonML adventurers group |js})}
-      </Footer>
-    </Layout>
+    <Content style=Styles.content>
+      <AppRouter>
+        {currentRoute =>
+           Route.Config.(
+             switch (currentRoute) {
+             | Home => <LandingPage.Index />
+             | Books => <NewBooks />
+             | MyProfile => <MyProfile firstName="Hieu" lastName=None />
+             | NewBook => <NewBook />
+             | Shipper => <Shipper />
+             | NotFound => <div> {ReasonReact.string("Not Found")} </div>
+             }
+           )}
+      </AppRouter>
+    </Content>
+    <Footer style=Styles.footer>
+      {str({js| Implemented by 🐪 EH ReasonML adventurers group |js})}
+    </Footer>
   </Layout>;

@@ -71,123 +71,6 @@
           "fields": null
         },
         {
-          "inputFields": [
-            {
-              "name": "_eq",
-              "defaultValue": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
-              },
-              "description": null
-            },
-            {
-              "name": "_gt",
-              "defaultValue": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
-              },
-              "description": null
-            },
-            {
-              "name": "_gte",
-              "defaultValue": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
-              },
-              "description": null
-            },
-            {
-              "name": "_in",
-              "defaultValue": null,
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Boolean",
-                    "ofType": null
-                  }
-                }
-              },
-              "description": null
-            },
-            {
-              "name": "_is_null",
-              "defaultValue": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
-              },
-              "description": null
-            },
-            {
-              "name": "_lt",
-              "defaultValue": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
-              },
-              "description": null
-            },
-            {
-              "name": "_lte",
-              "defaultValue": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
-              },
-              "description": null
-            },
-            {
-              "name": "_neq",
-              "defaultValue": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
-              },
-              "description": null
-            },
-            {
-              "name": "_nin",
-              "defaultValue": null,
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "Boolean",
-                    "ofType": null
-                  }
-                }
-              },
-              "description": null
-            }
-          ],
-          "kind": "INPUT_OBJECT",
-          "possibleTypes": null,
-          "interfaces": null,
-          "name": "Boolean_comparison_exp",
-          "enumValues": null,
-          "description": "expression to compare columns of type Boolean. All fields are combined with logical 'AND'.",
-          "fields": null
-        },
-        {
           "inputFields": null,
           "kind": "SCALAR",
           "possibleTypes": null,
@@ -6222,6 +6105,33 @@
                     "name": null,
                     "ofType": {
                       "kind": "INPUT_OBJECT",
+                      "name": "user_roles_bool_exp",
+                      "ofType": null
+                    }
+                  },
+                  "description": "filter the rows which have to be deleted"
+                }
+              ],
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "name": "delete_user_roles",
+              "type": {
+                "kind": "OBJECT",
+                "name": "user_roles_mutation_response",
+                "ofType": null
+              },
+              "description": "delete data from the table: \"user_roles\""
+            },
+            {
+              "args": [
+                {
+                  "name": "where",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
                       "name": "users_bool_exp",
                       "ofType": null
                     }
@@ -6328,6 +6238,51 @@
                 "ofType": null
               },
               "description": "insert data into the table: \"books\""
+            },
+            {
+              "args": [
+                {
+                  "name": "objects",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "LIST",
+                      "name": null,
+                      "ofType": {
+                        "kind": "NON_NULL",
+                        "name": null,
+                        "ofType": {
+                          "kind": "INPUT_OBJECT",
+                          "name": "user_roles_insert_input",
+                          "ofType": null
+                        }
+                      }
+                    }
+                  },
+                  "description": "the rows to be inserted"
+                },
+                {
+                  "name": "on_conflict",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "user_roles_on_conflict",
+                    "ofType": null
+                  },
+                  "description": "on conflict condition"
+                }
+              ],
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "name": "insert_user_roles",
+              "type": {
+                "kind": "OBJECT",
+                "name": "user_roles_mutation_response",
+                "ofType": null
+              },
+              "description": "insert data into the table: \"user_roles\""
             },
             {
               "args": [
@@ -6467,6 +6422,43 @@
                 "ofType": null
               },
               "description": "update data of the table: \"books\""
+            },
+            {
+              "args": [
+                {
+                  "name": "_set",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "user_roles_set_input",
+                    "ofType": null
+                  },
+                  "description": "sets the columns of the filtered rows to the given values"
+                },
+                {
+                  "name": "where",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "user_roles_bool_exp",
+                      "ofType": null
+                    }
+                  },
+                  "description": "filter the rows which have to be updated"
+                }
+              ],
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "name": "update_user_roles",
+              "type": {
+                "kind": "OBJECT",
+                "name": "user_roles_mutation_response",
+                "ofType": null
+              },
+              "description": "update data of the table: \"user_roles\""
             },
             {
               "args": [
@@ -6974,6 +6966,207 @@
                 "ofType": null
               },
               "description": "fetch data from the table: \"books\" using primary key columns"
+            },
+            {
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "ENUM",
+                        "name": "user_roles_select_column",
+                        "ofType": null
+                      }
+                    }
+                  },
+                  "description": "distinct select on columns"
+                },
+                {
+                  "name": "limit",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  },
+                  "description": "limit the nuber of rows returned"
+                },
+                {
+                  "name": "offset",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  },
+                  "description": "skip the first n rows. Use only with order_by"
+                },
+                {
+                  "name": "order_by",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "INPUT_OBJECT",
+                        "name": "user_roles_order_by",
+                        "ofType": null
+                      }
+                    }
+                  },
+                  "description": "sort the rows by one or more columns"
+                },
+                {
+                  "name": "where",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "user_roles_bool_exp",
+                    "ofType": null
+                  },
+                  "description": "filter the rows returned"
+                }
+              ],
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "name": "user_roles",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "user_roles",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
+              "description": "fetch data from the table: \"user_roles\""
+            },
+            {
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "ENUM",
+                        "name": "user_roles_select_column",
+                        "ofType": null
+                      }
+                    }
+                  },
+                  "description": "distinct select on columns"
+                },
+                {
+                  "name": "limit",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  },
+                  "description": "limit the nuber of rows returned"
+                },
+                {
+                  "name": "offset",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  },
+                  "description": "skip the first n rows. Use only with order_by"
+                },
+                {
+                  "name": "order_by",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "INPUT_OBJECT",
+                        "name": "user_roles_order_by",
+                        "ofType": null
+                      }
+                    }
+                  },
+                  "description": "sort the rows by one or more columns"
+                },
+                {
+                  "name": "where",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "user_roles_bool_exp",
+                    "ofType": null
+                  },
+                  "description": "filter the rows returned"
+                }
+              ],
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "name": "user_roles_aggregate",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "user_roles_aggregate",
+                  "ofType": null
+                }
+              },
+              "description": "fetch aggregated fields from the table: \"user_roles\""
+            },
+            {
+              "args": [
+                {
+                  "name": "value",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "description": null
+                }
+              ],
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "name": "user_roles_by_pk",
+              "type": {
+                "kind": "OBJECT",
+                "name": "user_roles",
+                "ofType": null
+              },
+              "description": "fetch data from the table: \"user_roles\" using primary key columns"
             },
             {
               "args": [
@@ -7602,6 +7795,207 @@
                       "name": null,
                       "ofType": {
                         "kind": "ENUM",
+                        "name": "user_roles_select_column",
+                        "ofType": null
+                      }
+                    }
+                  },
+                  "description": "distinct select on columns"
+                },
+                {
+                  "name": "limit",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  },
+                  "description": "limit the nuber of rows returned"
+                },
+                {
+                  "name": "offset",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  },
+                  "description": "skip the first n rows. Use only with order_by"
+                },
+                {
+                  "name": "order_by",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "INPUT_OBJECT",
+                        "name": "user_roles_order_by",
+                        "ofType": null
+                      }
+                    }
+                  },
+                  "description": "sort the rows by one or more columns"
+                },
+                {
+                  "name": "where",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "user_roles_bool_exp",
+                    "ofType": null
+                  },
+                  "description": "filter the rows returned"
+                }
+              ],
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "name": "user_roles",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "user_roles",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
+              "description": "fetch data from the table: \"user_roles\""
+            },
+            {
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "ENUM",
+                        "name": "user_roles_select_column",
+                        "ofType": null
+                      }
+                    }
+                  },
+                  "description": "distinct select on columns"
+                },
+                {
+                  "name": "limit",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  },
+                  "description": "limit the nuber of rows returned"
+                },
+                {
+                  "name": "offset",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  },
+                  "description": "skip the first n rows. Use only with order_by"
+                },
+                {
+                  "name": "order_by",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "INPUT_OBJECT",
+                        "name": "user_roles_order_by",
+                        "ofType": null
+                      }
+                    }
+                  },
+                  "description": "sort the rows by one or more columns"
+                },
+                {
+                  "name": "where",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "user_roles_bool_exp",
+                    "ofType": null
+                  },
+                  "description": "filter the rows returned"
+                }
+              ],
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "name": "user_roles_aggregate",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "user_roles_aggregate",
+                  "ofType": null
+                }
+              },
+              "description": "fetch aggregated fields from the table: \"user_roles\""
+            },
+            {
+              "args": [
+                {
+                  "name": "value",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "String",
+                      "ofType": null
+                    }
+                  },
+                  "description": null
+                }
+              ],
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "name": "user_roles_by_pk",
+              "type": {
+                "kind": "OBJECT",
+                "name": "user_roles",
+                "ofType": null
+              },
+              "description": "fetch data from the table: \"user_roles\" using primary key columns"
+            },
+            {
+              "args": [
+                {
+                  "name": "distinct_on",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "ENUM",
                         "name": "users_select_column",
                         "ofType": null
                       }
@@ -7924,6 +8318,846 @@
           "kind": "OBJECT",
           "possibleTypes": null,
           "interfaces": [],
+          "name": "user_roles",
+          "enumValues": null,
+          "description": "columns and relationships of \"user_roles\"",
+          "fields": [
+            {
+              "args": [],
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "name": "comment",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "description": null
+            },
+            {
+              "args": [],
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "name": "value",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "description": null
+            }
+          ]
+        },
+        {
+          "inputFields": null,
+          "kind": "OBJECT",
+          "possibleTypes": null,
+          "interfaces": [],
+          "name": "user_roles_aggregate",
+          "enumValues": null,
+          "description": "aggregated selection of \"user_roles\"",
+          "fields": [
+            {
+              "args": [],
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "name": "aggregate",
+              "type": {
+                "kind": "OBJECT",
+                "name": "user_roles_aggregate_fields",
+                "ofType": null
+              },
+              "description": null
+            },
+            {
+              "args": [],
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "name": "nodes",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "user_roles",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
+              "description": null
+            }
+          ]
+        },
+        {
+          "inputFields": null,
+          "kind": "OBJECT",
+          "possibleTypes": null,
+          "interfaces": [],
+          "name": "user_roles_aggregate_fields",
+          "enumValues": null,
+          "description": "aggregate fields of \"user_roles\"",
+          "fields": [
+            {
+              "args": [
+                {
+                  "name": "columns",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "NON_NULL",
+                      "name": null,
+                      "ofType": {
+                        "kind": "ENUM",
+                        "name": "user_roles_select_column",
+                        "ofType": null
+                      }
+                    }
+                  },
+                  "description": null
+                },
+                {
+                  "name": "distinct",
+                  "defaultValue": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  },
+                  "description": null
+                }
+              ],
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "name": "count",
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "description": null
+            },
+            {
+              "args": [],
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "name": "max",
+              "type": {
+                "kind": "OBJECT",
+                "name": "user_roles_max_fields",
+                "ofType": null
+              },
+              "description": null
+            },
+            {
+              "args": [],
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "name": "min",
+              "type": {
+                "kind": "OBJECT",
+                "name": "user_roles_min_fields",
+                "ofType": null
+              },
+              "description": null
+            }
+          ]
+        },
+        {
+          "inputFields": [
+            {
+              "name": "count",
+              "defaultValue": null,
+              "type": {
+                "kind": "ENUM",
+                "name": "order_by",
+                "ofType": null
+              },
+              "description": null
+            },
+            {
+              "name": "max",
+              "defaultValue": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "user_roles_max_order_by",
+                "ofType": null
+              },
+              "description": null
+            },
+            {
+              "name": "min",
+              "defaultValue": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "user_roles_min_order_by",
+                "ofType": null
+              },
+              "description": null
+            }
+          ],
+          "kind": "INPUT_OBJECT",
+          "possibleTypes": null,
+          "interfaces": null,
+          "name": "user_roles_aggregate_order_by",
+          "enumValues": null,
+          "description": "order by aggregate values of table \"user_roles\"",
+          "fields": null
+        },
+        {
+          "inputFields": [
+            {
+              "name": "data",
+              "defaultValue": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "user_roles_insert_input",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
+              "description": null
+            },
+            {
+              "name": "on_conflict",
+              "defaultValue": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "user_roles_on_conflict",
+                "ofType": null
+              },
+              "description": null
+            }
+          ],
+          "kind": "INPUT_OBJECT",
+          "possibleTypes": null,
+          "interfaces": null,
+          "name": "user_roles_arr_rel_insert_input",
+          "enumValues": null,
+          "description": "input type for inserting array relation for remote table \"user_roles\"",
+          "fields": null
+        },
+        {
+          "inputFields": [
+            {
+              "name": "_and",
+              "defaultValue": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "user_roles_bool_exp",
+                  "ofType": null
+                }
+              },
+              "description": null
+            },
+            {
+              "name": "_not",
+              "defaultValue": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "user_roles_bool_exp",
+                "ofType": null
+              },
+              "description": null
+            },
+            {
+              "name": "_or",
+              "defaultValue": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "user_roles_bool_exp",
+                  "ofType": null
+                }
+              },
+              "description": null
+            },
+            {
+              "name": "comment",
+              "defaultValue": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "String_comparison_exp",
+                "ofType": null
+              },
+              "description": null
+            },
+            {
+              "name": "value",
+              "defaultValue": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "String_comparison_exp",
+                "ofType": null
+              },
+              "description": null
+            }
+          ],
+          "kind": "INPUT_OBJECT",
+          "possibleTypes": null,
+          "interfaces": null,
+          "name": "user_roles_bool_exp",
+          "enumValues": null,
+          "description": "Boolean expression to filter rows from the table \"user_roles\". All fields are combined with a logical 'AND'.",
+          "fields": null
+        },
+        {
+          "inputFields": null,
+          "kind": "ENUM",
+          "possibleTypes": null,
+          "interfaces": null,
+          "name": "user_roles_constraint",
+          "enumValues": [
+            {
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "name": "user_roles_pkey",
+              "description": "unique or primary key constraint"
+            }
+          ],
+          "description": "unique or primary key constraints on table \"user_roles\"",
+          "fields": null
+        },
+        {
+          "inputFields": null,
+          "kind": "ENUM",
+          "possibleTypes": null,
+          "interfaces": null,
+          "name": "user_roles_enum",
+          "enumValues": [
+            {
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "name": "admin",
+              "description": "Users with all privileges"
+            },
+            {
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "name": "user",
+              "description": "Ordinary users"
+            }
+          ],
+          "description": null,
+          "fields": null
+        },
+        {
+          "inputFields": [
+            {
+              "name": "_eq",
+              "defaultValue": null,
+              "type": {
+                "kind": "ENUM",
+                "name": "user_roles_enum",
+                "ofType": null
+              },
+              "description": null
+            },
+            {
+              "name": "_in",
+              "defaultValue": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "user_roles_enum",
+                    "ofType": null
+                  }
+                }
+              },
+              "description": null
+            },
+            {
+              "name": "_is_null",
+              "defaultValue": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "description": null
+            },
+            {
+              "name": "_neq",
+              "defaultValue": null,
+              "type": {
+                "kind": "ENUM",
+                "name": "user_roles_enum",
+                "ofType": null
+              },
+              "description": null
+            },
+            {
+              "name": "_nin",
+              "defaultValue": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "user_roles_enum",
+                    "ofType": null
+                  }
+                }
+              },
+              "description": null
+            }
+          ],
+          "kind": "INPUT_OBJECT",
+          "possibleTypes": null,
+          "interfaces": null,
+          "name": "user_roles_enum_comparison_exp",
+          "enumValues": null,
+          "description": "expression to compare columns of type user_roles_enum. All fields are combined with logical 'AND'.",
+          "fields": null
+        },
+        {
+          "inputFields": [
+            {
+              "name": "comment",
+              "defaultValue": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null
+            },
+            {
+              "name": "value",
+              "defaultValue": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null
+            }
+          ],
+          "kind": "INPUT_OBJECT",
+          "possibleTypes": null,
+          "interfaces": null,
+          "name": "user_roles_insert_input",
+          "enumValues": null,
+          "description": "input type for inserting data into table \"user_roles\"",
+          "fields": null
+        },
+        {
+          "inputFields": null,
+          "kind": "OBJECT",
+          "possibleTypes": null,
+          "interfaces": [],
+          "name": "user_roles_max_fields",
+          "enumValues": null,
+          "description": "aggregate max on columns",
+          "fields": [
+            {
+              "args": [],
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "name": "comment",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null
+            },
+            {
+              "args": [],
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "name": "value",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null
+            }
+          ]
+        },
+        {
+          "inputFields": [
+            {
+              "name": "comment",
+              "defaultValue": null,
+              "type": {
+                "kind": "ENUM",
+                "name": "order_by",
+                "ofType": null
+              },
+              "description": null
+            },
+            {
+              "name": "value",
+              "defaultValue": null,
+              "type": {
+                "kind": "ENUM",
+                "name": "order_by",
+                "ofType": null
+              },
+              "description": null
+            }
+          ],
+          "kind": "INPUT_OBJECT",
+          "possibleTypes": null,
+          "interfaces": null,
+          "name": "user_roles_max_order_by",
+          "enumValues": null,
+          "description": "order by max() on columns of table \"user_roles\"",
+          "fields": null
+        },
+        {
+          "inputFields": null,
+          "kind": "OBJECT",
+          "possibleTypes": null,
+          "interfaces": [],
+          "name": "user_roles_min_fields",
+          "enumValues": null,
+          "description": "aggregate min on columns",
+          "fields": [
+            {
+              "args": [],
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "name": "comment",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null
+            },
+            {
+              "args": [],
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "name": "value",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null
+            }
+          ]
+        },
+        {
+          "inputFields": [
+            {
+              "name": "comment",
+              "defaultValue": null,
+              "type": {
+                "kind": "ENUM",
+                "name": "order_by",
+                "ofType": null
+              },
+              "description": null
+            },
+            {
+              "name": "value",
+              "defaultValue": null,
+              "type": {
+                "kind": "ENUM",
+                "name": "order_by",
+                "ofType": null
+              },
+              "description": null
+            }
+          ],
+          "kind": "INPUT_OBJECT",
+          "possibleTypes": null,
+          "interfaces": null,
+          "name": "user_roles_min_order_by",
+          "enumValues": null,
+          "description": "order by min() on columns of table \"user_roles\"",
+          "fields": null
+        },
+        {
+          "inputFields": null,
+          "kind": "OBJECT",
+          "possibleTypes": null,
+          "interfaces": [],
+          "name": "user_roles_mutation_response",
+          "enumValues": null,
+          "description": "response of any mutation on the table \"user_roles\"",
+          "fields": [
+            {
+              "args": [],
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "name": "affected_rows",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Int",
+                  "ofType": null
+                }
+              },
+              "description": "number of affected rows by the mutation"
+            },
+            {
+              "args": [],
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "name": "returning",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "OBJECT",
+                      "name": "user_roles",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
+              "description": "data of the affected rows by the mutation"
+            }
+          ]
+        },
+        {
+          "inputFields": [
+            {
+              "name": "data",
+              "defaultValue": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "user_roles_insert_input",
+                  "ofType": null
+                }
+              },
+              "description": null
+            },
+            {
+              "name": "on_conflict",
+              "defaultValue": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "user_roles_on_conflict",
+                "ofType": null
+              },
+              "description": null
+            }
+          ],
+          "kind": "INPUT_OBJECT",
+          "possibleTypes": null,
+          "interfaces": null,
+          "name": "user_roles_obj_rel_insert_input",
+          "enumValues": null,
+          "description": "input type for inserting object relation for remote table \"user_roles\"",
+          "fields": null
+        },
+        {
+          "inputFields": [
+            {
+              "name": "constraint",
+              "defaultValue": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "user_roles_constraint",
+                  "ofType": null
+                }
+              },
+              "description": null
+            },
+            {
+              "name": "update_columns",
+              "defaultValue": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "LIST",
+                  "name": null,
+                  "ofType": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "ENUM",
+                      "name": "user_roles_update_column",
+                      "ofType": null
+                    }
+                  }
+                }
+              },
+              "description": null
+            }
+          ],
+          "kind": "INPUT_OBJECT",
+          "possibleTypes": null,
+          "interfaces": null,
+          "name": "user_roles_on_conflict",
+          "enumValues": null,
+          "description": "on conflict condition type for table \"user_roles\"",
+          "fields": null
+        },
+        {
+          "inputFields": [
+            {
+              "name": "comment",
+              "defaultValue": null,
+              "type": {
+                "kind": "ENUM",
+                "name": "order_by",
+                "ofType": null
+              },
+              "description": null
+            },
+            {
+              "name": "value",
+              "defaultValue": null,
+              "type": {
+                "kind": "ENUM",
+                "name": "order_by",
+                "ofType": null
+              },
+              "description": null
+            }
+          ],
+          "kind": "INPUT_OBJECT",
+          "possibleTypes": null,
+          "interfaces": null,
+          "name": "user_roles_order_by",
+          "enumValues": null,
+          "description": "ordering options when selecting data from \"user_roles\"",
+          "fields": null
+        },
+        {
+          "inputFields": null,
+          "kind": "ENUM",
+          "possibleTypes": null,
+          "interfaces": null,
+          "name": "user_roles_select_column",
+          "enumValues": [
+            {
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "name": "comment",
+              "description": "column name"
+            },
+            {
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "name": "value",
+              "description": "column name"
+            }
+          ],
+          "description": "select columns of table \"user_roles\"",
+          "fields": null
+        },
+        {
+          "inputFields": [
+            {
+              "name": "comment",
+              "defaultValue": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null
+            },
+            {
+              "name": "value",
+              "defaultValue": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "description": null
+            }
+          ],
+          "kind": "INPUT_OBJECT",
+          "possibleTypes": null,
+          "interfaces": null,
+          "name": "user_roles_set_input",
+          "enumValues": null,
+          "description": "input type for updating data in table \"user_roles\"",
+          "fields": null
+        },
+        {
+          "inputFields": null,
+          "kind": "ENUM",
+          "possibleTypes": null,
+          "interfaces": null,
+          "name": "user_roles_update_column",
+          "enumValues": [
+            {
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "name": "comment",
+              "description": "column name"
+            },
+            {
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "name": "value",
+              "description": "column name"
+            }
+          ],
+          "description": "update columns of table \"user_roles\"",
+          "fields": null
+        },
+        {
+          "inputFields": null,
+          "kind": "OBJECT",
+          "possibleTypes": null,
+          "interfaces": [],
           "name": "users",
           "enumValues": null,
           "description": "columns and relationships of \"users\"",
@@ -7964,22 +9198,6 @@
               "args": [],
               "isDeprecated": false,
               "deprecationReason": null,
-              "name": "is_admin",
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Boolean",
-                  "ofType": null
-                }
-              },
-              "description": null
-            },
-            {
-              "args": [],
-              "isDeprecated": false,
-              "deprecationReason": null,
               "name": "name",
               "type": {
                 "kind": "NON_NULL",
@@ -7989,6 +9207,18 @@
                   "name": "String",
                   "ofType": null
                 }
+              },
+              "description": null
+            },
+            {
+              "args": [],
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "name": "role",
+              "type": {
+                "kind": "ENUM",
+                "name": "user_roles_enum",
+                "ofType": null
               },
               "description": null
             }
@@ -8482,21 +9712,21 @@
               "description": null
             },
             {
-              "name": "is_admin",
-              "defaultValue": null,
-              "type": {
-                "kind": "INPUT_OBJECT",
-                "name": "Boolean_comparison_exp",
-                "ofType": null
-              },
-              "description": null
-            },
-            {
               "name": "name",
               "defaultValue": null,
               "type": {
                 "kind": "INPUT_OBJECT",
                 "name": "String_comparison_exp",
+                "ofType": null
+              },
+              "description": null
+            },
+            {
+              "name": "role",
+              "defaultValue": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "user_roles_enum_comparison_exp",
                 "ofType": null
               },
               "description": null
@@ -8577,21 +9807,21 @@
               "description": null
             },
             {
-              "name": "is_admin",
-              "defaultValue": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
-              },
-              "description": null
-            },
-            {
               "name": "name",
               "defaultValue": null,
               "type": {
                 "kind": "SCALAR",
                 "name": "String",
+                "ofType": null
+              },
+              "description": null
+            },
+            {
+              "name": "role",
+              "defaultValue": null,
+              "type": {
+                "kind": "ENUM",
+                "name": "user_roles_enum",
                 "ofType": null
               },
               "description": null
@@ -8937,7 +10167,7 @@
               "description": null
             },
             {
-              "name": "is_admin",
+              "name": "name",
               "defaultValue": null,
               "type": {
                 "kind": "ENUM",
@@ -8947,7 +10177,7 @@
               "description": null
             },
             {
-              "name": "name",
+              "name": "role",
               "defaultValue": null,
               "type": {
                 "kind": "ENUM",
@@ -8987,13 +10217,13 @@
             {
               "isDeprecated": false,
               "deprecationReason": null,
-              "name": "is_admin",
+              "name": "name",
               "description": "column name"
             },
             {
               "isDeprecated": false,
               "deprecationReason": null,
-              "name": "name",
+              "name": "role",
               "description": "column name"
             }
           ],
@@ -9023,21 +10253,21 @@
               "description": null
             },
             {
-              "name": "is_admin",
-              "defaultValue": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
-              },
-              "description": null
-            },
-            {
               "name": "name",
               "defaultValue": null,
               "type": {
                 "kind": "SCALAR",
                 "name": "String",
+                "ofType": null
+              },
+              "description": null
+            },
+            {
+              "name": "role",
+              "defaultValue": null,
+              "type": {
+                "kind": "ENUM",
+                "name": "user_roles_enum",
                 "ofType": null
               },
               "description": null
@@ -9249,13 +10479,13 @@
             {
               "isDeprecated": false,
               "deprecationReason": null,
-              "name": "is_admin",
+              "name": "name",
               "description": "column name"
             },
             {
               "isDeprecated": false,
               "deprecationReason": null,
-              "name": "name",
+              "name": "role",
               "description": "column name"
             }
           ],
